@@ -2,11 +2,8 @@
 require_once("donoConBD.php");
 require_once("dono.php");
 
-
-
-//VARIAVEL DE ACESSO AO BANCO
+//CRIACAO DE INSTANCIA DA CLASSE DonoConBD(Classe DAO)
 $donoDao=new DonoConBD();
-$testRegister=new DonoConBD();
 ?>
 
 <html>
@@ -24,39 +21,39 @@ $testRegister=new DonoConBD();
 		//VERIFICA SE GET ESTA VAZIO
 		if(!empty($_GET)){
 				
-			//RETPRNANDO BUSCA DO USUARIO
+			//FAZENDO BUSCA POR USUARIO
 			$resultado=$donoDao->buscaUsuario($_GET["nome"]);
-
+			
 			//VERIFICANDO SE HOUVE RETORNO DE RESULTADOS
-			if($resultado!=0 && $resultado!=-1){
+			switch($resultado){
+							
+				//VERIFICACAO NO CASO DE NAO HAVER OCORRENCIAS
+				case DonoConBD::NO_RESULTS:
+					echo "<br> USUARIO NAO ENCONTRADO";
+					break;
 					
-				//PERCORRENDO O VETOR
-				foreach($resultado as $index){
-					echo "<br>".$index->getUsuario();
-				}
-				
-			}
-			
-			//VERIFICACAO NO CASO DE PESQUISA EM "BRANCO"
-			elseif($resultado==-1){
-				echo "<br> USUARIO NAO ENCONTRADO";
-			}
-			
-			//VERIFICACAO NO CASO DE NAO HAVER OCORRENCIAS
-			else{
-				echo "<br> NADA A EXIBIR";
+				//VERIFICACAO NO CASO DE PESQUISA EM "BRANCO"
+				case DonoConBD::BLANK:
+					echo "<br> NADA A EXIBIR";
+					break;
+						
+				default:
+					//MOSTRANDO OS RESULTADOS
+					foreach($resultado as $index){
+						echo "<br>".$index->getCodigo();
+						echo "<br>".$index->getUsuario();
+						echo "<br>".$index->getSenha();
+						echo "<br>".$index->getNome();
+						echo "<br>".$index->getSobrenome();
+						echo "<br>".$index->getNascimento();
+						echo "<br>".$index->getEmail()."<br>";
+						echo "<br>---------------------------------------------------------------<br>";
+					}
+					break;
 			}
 		}
 		
-		$testFeedBack = $testRegister->checkEmail($_GET["nome"]);
-		if($testFeedBack == DonoConBD::EMAIL_EXISTS)
-			echo "<br>EMAIL EXISTE<br>";
-		elseif($testFeedBack == DonoConBD::EMAIL_INVALID)
-			echo "<br>O EMAIL INSERIDO ESTA INVALIDO<br>";
-		elseif($testFeedBack == DonoConBD::EMAIL_ALLOWED)
-			echo "<br>ESTE EMAIL PODE SER CADASTRADO<br>";
-		else
-			echo "<br>ERRO DESCONHECIDO<br>";
+		
 			
 		?>
 	</body>

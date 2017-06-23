@@ -8,6 +8,9 @@ class DonoConBD
 	// variavel para conexao com o banco de dados
 	private $conex;
 	
+	const NO_RESULTS = -1;
+	const BLANK = 0;
+	
 	const EMAIL_EXISTS = 0;
 	const EMAIL_INVALID = -1;
 	const EMAIL_ALLOWED = 1;
@@ -24,7 +27,7 @@ class DonoConBD
 	public function buscaUsuario($termo)
 	{	
 		
-		if($termo=="") return 0;
+		if($termo=="") return self::BLANK;
 		
 		//preparando a query do banco de dados
 		$resultado=$this->conex->getConnection()->prepare("select * from dono where nome like ? or sobrenome like ?");
@@ -52,6 +55,7 @@ class DonoConBD
 				$donoPopula->setUsuario($linha->usuario);
 				$donoPopula->setSenha($linha->senha);
 				$donoPopula->setNome($linha->nome);
+				$donoPopula->setSobrenome($linha->sobrenome);
 				$donoPopula->setNascimento($linha->nascimento);
 				$donoPopula->setEmail($linha->email);
 				
@@ -61,7 +65,7 @@ class DonoConBD
 		}
 		
 		else{
-			$arr = -1;
+			$arr = self::NO_RESULTS;
 		}
 		
 		return $arr;
