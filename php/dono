@@ -1,0 +1,65 @@
+<?php
+class Dono{
+	
+	private $codigo;
+	private $nome;
+	private $sobrenome;
+	private $nascimento;
+	private $email;
+	
+	function Dono()
+	{
+		
+	}
+	
+	public function getCodigo()
+	{
+		return $this->codigo;
+	}
+	
+	public function setCodigo($pCodigo)
+	{
+		$this->codigo = $pCodigo;
+	}
+	
+	public function getNome()
+	{
+		return $this->nome;
+	}
+	
+	public function setNome($pNome)
+	{
+		$this->nome = $pNome;
+	}
+	
+	public function getSobrenome()
+	{
+		return $this->sobrenome;
+	}
+	
+	public function setSobrenome($pSobrenome)
+	{
+		$this->sobrenome = $pSobrenome;
+	}
+	
+	public function getNascimento()
+	{
+		return $this->nascimento;
+	}
+	
+	public function setNascimento($pNascimento)
+	{
+		$this->nascimento = $pNascimento;
+	}
+	
+	public function getEmail()
+	{
+		return $this->email;
+	}
+	
+	public function setEmail($pEmail)
+	{
+		$this->email = $pEmail;
+	}
+}
+?>
