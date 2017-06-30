@@ -2,15 +2,15 @@
 class Dono{
 	
 	private $codigo;
-	private $usuario = "usuario";
+	private $usuario;
 	private $senha;
-	private $nome = "nome";
-	private $sobrenome = "sobrenome";
-	private $nascimento = "";
-	private $email = "";
+	private $nome;
+	private $sobrenome;
+	private $nascimento;
+	private $sexo;
+	private $email;
 	
-	function __construct()
-	{
+	function __construct(){
 		
 		$usuario = "usuario";
 		$nome = "nome";
@@ -18,73 +18,68 @@ class Dono{
 		$nascimento = "";
 		$email = "";
 	}
-	public function getCodigo()
-	{
+	
+	public function getCodigo(){
 		return $this->codigo;
 	}
 	
-	public function setCodigo($pCodigo)
-	{
+	public function setCodigo($pCodigo){
 		$this->codigo = $pCodigo;
 	}
 	
-	public function getUsuario()
-	{
+	public function getUsuario(){
 		return $this->usuario;
 	}
 	
-	public function setUsuario($pUsuario)
-	{
+	public function setUsuario($pUsuario){
 		$this->usuario = $pUsuario;
 	}
 	
-	public function getSenha()
-	{
+	public function getSenha(){
 		return $this->senha;
 	}
 	
-	public function setSenha($pSenha)
-	{
+	public function setSenha($pSenha){
 		$this->senha = $pSenha;
 	}
 	
-	public function getNome()
-	{
+	public function getNome(){
 		return $this->nome;
 	}
 	
-	public function setNome($pNome)
-	{
+	public function setNome($pNome){
 		$this->nome = $pNome;
 	}
 	
-	public function getSobrenome()
-	{
+	public function getSobrenome(){
 		return $this->sobrenome;
 	}
 	
-	public function setSobrenome($pSobrenome)
-	{
+	public function setSobrenome($pSobrenome){
 		$this->sobrenome = $pSobrenome;
 	}
 	
-	public function getNascimento()
-	{
+	public function getSexo(){
+		return $this->sexo;
+	}
+	
+	public function setSexo($pSexo){
+		$this->sexo = $pSexo;
+	}
+	
+	public function getNascimento(){
 		return $this->nascimento;
 	}
 	
-	public function setNascimento($pNascimento)
-	{
+	public function setNascimento($pNascimento){
 		$this->nascimento = $pNascimento;
 	}
 	
-	public function getEmail()
-	{
+	public function getEmail(){
 		return $this->email;
 	}
 	
-	public function setEmail($pEmail)
-	{
+	public function setEmail($pEmail){
 		$this->email = $pEmail;
 	}
 }

@@ -125,9 +125,21 @@ class DonoConBD
 		}
 	}
 		
-	public function cadastrar()
+	public bool function cadastrar($pOwner)
 	{
-	/*	$conexao = new PDO("mysql:host = localhost; dbname = bdanimalnet","root","");
+		$result=$this->conex->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+		
+		$result->bindValue(1,$pOwner->getUsuario());
+		$result->bindValue(2,$pOwner->getSenha());
+		$result->bindValue(3,$pOwner->getNome());
+		$result->bindValue(4,$pOwner->getSobrenome());
+		$result->bindValue(5,$pOwner->getNascimento());
+		$result->bindValue(6,$pOwner->getSexo());
+		$result->bindValue(7,$pOwner->getEmail());
+		
+		$result->execute();
+		
+		/*$conexao = new PDO("mysql:host = localhost; dbname = bdanimalnet","root","");
 		$stmt = $conexao->prepare("INSERT INTO dono(nome,sobrenome, email) VALUES(?,?,?)");
 		$stmt->bindParam(1,”Nome 20105041555”);
 		$stmt->bindParam(2,”sobrenome 20105041555”);

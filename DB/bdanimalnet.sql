@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 24-Jun-2017 às 13:47
+-- Generation Time: 30-Jun-2017 às 22:11
 -- Versão do servidor: 10.1.22-MariaDB
 -- PHP Version: 7.1.4
 
@@ -49,6 +49,7 @@ CREATE TABLE `dono` (
   `nome` varchar(255) NOT NULL,
   `sobrenome` varchar(255) NOT NULL,
   `nascimento` date NOT NULL,
+  `sexo` varchar(15) DEFAULT NULL,
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -56,12 +57,12 @@ CREATE TABLE `dono` (
 -- Extraindo dados da tabela `dono`
 --
 
-INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimento`, `email`) VALUES
-(2, 'b', 'b', 'b', 'b', '2017-05-02', 'b@b.com'),
-(3, 'c', 'c', 'c', 'c', '2017-05-03', 'c@c.com.br'),
-(4, 'henri', 'henrisenha', 'henrique', 'dourado', '2017-06-15', 'henriquedourado@hotmal.com'),
-(5, 'lucca', 'lucca', 'lucas', 'Cardoso', '2017-06-14', 'lucca@hotmail.com'),
-(6, 'bia', 'bia', 'Maria', 'beatriz', '2017-06-13', 'bia@gmail.com');
+INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimento`, `sexo`, `email`) VALUES
+(2, 'b', 'b', 'b', 'b', '2017-05-02', NULL, 'b@b.com'),
+(3, 'c', 'c', 'c', 'c', '2017-05-03', NULL, 'c@c.com.br'),
+(4, 'henri', 'henrisenha', 'henrique', 'dourado', '2017-06-15', NULL, 'henriquedourado@hotmal.com'),
+(5, 'lucca', 'lucca', 'lucas', 'Cardoso', '2017-06-14', NULL, 'lucca@hotmail.com'),
+(6, 'bia', 'bia', 'Maria', 'beatriz', '2017-06-13', NULL, 'bia@gmail.com');
 
 -- --------------------------------------------------------
 
