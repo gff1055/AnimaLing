@@ -125,9 +125,9 @@ class DonoConBD
 		}
 	}
 		
-	public bool function cadastrar($pOwner)
+	public function cadastrar($pOwner)
 	{
-		$result=$this->conex->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+		$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
 		
 		$result->bindValue(1,$pOwner->getUsuario());
 		$result->bindValue(2,$pOwner->getSenha());

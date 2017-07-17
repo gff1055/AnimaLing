@@ -31,17 +31,19 @@ $owner=new Dono();
 		</form>-->
 	</body>
 	<?php
-	if(!empty($_POST)){
+	
 		
-		$owner->setNome($_POST["firstName"]);
-		$owner->setSobreNome($_POST["lastName"]);
-		$owner->setUsuario($_POST["user"]);
-		$owner->setSenha($_POST["password"]);
-		$owner->setNascimento($_POST["birthday"]);
-		$owner->setSexo($_POST["genre"]);
-		$owner->setEmail($_POST("email"));
+	$owner->setNome("firstName");
+	$owner->setSobreNome("lastName");
+	$owner->setUsuario("user");
+	$owner->setSenha("password");
+	$objAuxData = new DateTime('2017-07-17');
+	$owner->setNascimento($objAuxData->format('y/m/d'));
+	$owner->setNascimento("2012-17-07");
+	$owner->setSexo("F");
+	$owner->setEmail("email@email.com");
 		
-		$testRegister->cadastrar($owner);
+	$testRegister->cadastrar($owner);
 		
 		/*switch($testFeedBack){
 			
@@ -59,6 +61,6 @@ $owner=new Dono();
 				break;
 				
 		}*/
-	}
+	
 	?>
 </html>

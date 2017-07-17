@@ -13,5 +13,7 @@ donoDao = new DonoConBD();
 	<head></head>
 	<body>
 		<a href="php/testebusca.php">teste</a>
+		<br>
+		<a href="php/cadastro_usuario.php">testecadastri</a>
 	</body>
 <html>
