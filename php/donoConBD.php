@@ -98,11 +98,11 @@ class DonoConBD
 	public function checkEmail($pEmail){
 		
 		//VERIFICA SE O EMAIL FOI PREENCHIDO CORRETAMENTE
-		$hasPoint = strrpos($pEmail,'.');
-		$hasAt = strrpos($pEmail,'@');
-		if($hasPoint == false || $hasAt == false){
-			return self::EMAIL_INVALID;	
-		}
+//		$hasPoint = strrpos($pEmail,'.');
+//		$hasAt = strrpos($pEmail,'@');
+//		if($hasPoint == false || $hasAt == false){
+//			return self::EMAIL_INVALID;	
+//		}
 		
 		//PREPARACAO DA QUERY DE BUSCA
 		$result=$this->conex->getConnection()->prepare("select * from dono where email=?");
@@ -138,18 +138,24 @@ class DonoConBD
 		$result->bindValue(7,$pOwner->getEmail());
 		
 		$result->execute();
-		
-		/*$conexao = new PDO("mysql:host = localhost; dbname = bdanimalnet","root","");
-		$stmt = $conexao->prepare("INSERT INTO dono(nome,sobrenome, email) VALUES(?,?,?)");
-		$stmt->bindParam(1,”Nome 20105041555”);
-		$stmt->bindParam(2,”sobrenome 20105041555”);
-		$stmt->bindParam(3,”email@email.com”);
-		$stmt->execute();*/
 	}
 	
-	public function atualizar()
+	public function atualizar($pOwner)
 	{
+		$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where id=4");
 		
+		$result->bindValue(1,$pOwner->getUsuario());
+		$result->bindValue(2,$pOwner->getSenha());
+		$result->bindValue(3,$pOwner->getNome());
+		$result->bindValue(4,$pOwner->getSobrenome());
+		$result->bindValue(5,$pOwner->getNascimento());
+		$result->bindValue(6,$pOwner->getSexo());
+		$result->bindValue(7,$pOwner->getEmail());
+		//$result->bindValue(8,$id);
+		
+		
+		$result->execute();
+		echo "funcao atualizar chegou ao fim";
 	}
 	
 	public function excluir($codigo)

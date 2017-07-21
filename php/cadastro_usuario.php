@@ -39,7 +39,7 @@ $owner=new Dono();
 	$owner->setSenha("password");
 	$objAuxData = new DateTime('2017-07-17');
 	$owner->setNascimento($objAuxData->format('y/m/d'));
-	$owner->setNascimento("2012-17-07");
+	//$owner->setNascimento("2012-17-07");
 	$owner->setSexo("F");
 	$owner->setEmail("email@email.com");
 		
