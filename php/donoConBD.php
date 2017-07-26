@@ -17,17 +17,21 @@ class DonoConBD
 	
 	const USER_EXISTS = 0;
 	const USER_SUCCESS = 1;
+
+	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
+	const CADASTRO = -1;
 	
 	//construtor da classe
 	function __construct()
 	{
 		$this->conex=new Conexao();
 	}
+
 	
 	public function buscaUsuario($termo)
 	{	
 		
-		if($termo=="") return self::BLANK;
+		//if($termo=="") return self::BLANK;
 		
 		//preparando a query do banco de dados
 		$resultado=$this->conex->getConnection()->prepare("select * from dono where nome like ? or sobrenome like ?");
@@ -72,37 +76,33 @@ class DonoConBD
 	}
 	
 	
-	public function isThereUser($login){
+	public function existe($campo, $dado){
 		
 		//PREPARACAO DA QUERY DE BUSCA
-		$result=$this->conex->getConnection()->prepare("select * from dono where usuario=?");
+		$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
 		
 		//EFETUANDO BIND DE VALORES NA QUERY
-		$result->bindValue(1,$login);
+		$result->bindValue(1,$dado);
 
 		//EXECUCAO DA QUERY COM OS VALORES
 		$result->execute();
 		
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
 		if($result->rowCount()>0){
-			return self::USER_EXISTS;
+			throw new exception("o $campo existe");
+			//return self::USER_EXISTS;
 		}
 		
 		//RETORNA SE O USUARIO NAO EXISTE		
 		else{
-			return self::USER_NOT_EXISTS;
+			echo "$campo $dado nao existe";
+			//return self::USER_NOT_EXISTS;
 		}
 	}
 	
 	
 	public function checkEmail($pEmail){
 		
-		//VERIFICA SE O EMAIL FOI PREENCHIDO CORRETAMENTE
-//		$hasPoint = strrpos($pEmail,'.');
-//		$hasAt = strrpos($pEmail,'@');
-//		if($hasPoint == false || $hasAt == false){
-//			return self::EMAIL_INVALID;	
-//		}
 		
 		//PREPARACAO DA QUERY DE BUSCA
 		$result=$this->conex->getConnection()->prepare("select * from dono where email=?");
@@ -124,73 +124,45 @@ class DonoConBD
 			return self::EMAIL_ALLOWED;
 		}
 	}
-		
-	public function cadastrar($pOwner)
-	{
-		$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-		
-		$result->bindValue(1,$pOwner->getUsuario());
-		$result->bindValue(2,$pOwner->getSenha());
-		$result->bindValue(3,$pOwner->getNome());
-		$result->bindValue(4,$pOwner->getSobrenome());
-		$result->bindValue(5,$pOwner->getNascimento());
-		$result->bindValue(6,$pOwner->getSexo());
-		$result->bindValue(7,$pOwner->getEmail());
-		
-		$result->execute();
+
+	public function alteracao($pOwner, $pCodigo){
+
+		try{
+			//VERIFICA SE A ALTERACAO NO BANCO É UM CADASTRO
+			if($pCodigo==self::CADASTRO){
+				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+			}
+			//NO CASO DE ATUALIZACAO DE DADOS
+			else{
+				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
+				$result->bindValue(8,$pCodigo);
+
+			}
+
+			// VALORES A SEREM PASSADOS PARA A QUERY
+			$result->bindValue(1,$pOwner->getUsuario());
+			$result->bindValue(2,$pOwner->getSenha());
+			$result->bindValue(3,$pOwner->getNome());
+			$result->bindValue(4,$pOwner->getSobrenome());
+			$result->bindValue(5,$pOwner->getNascimento());
+			$result->bindValue(6,$pOwner->getSexo());
+			$result->bindValue(7,$pOwner->getEmail());
+			
+			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+			$result->execute();
+
+		}catch(PDOException $erro){
+			echo "erro: ".$erro->getMessage();
+		}
 	}
-	
-	public function atualizar($pOwner)
-	{
-		$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where id=4");
 		
-		$result->bindValue(1,$pOwner->getUsuario());
-		$result->bindValue(2,$pOwner->getSenha());
-		$result->bindValue(3,$pOwner->getNome());
-		$result->bindValue(4,$pOwner->getSobrenome());
-		$result->bindValue(5,$pOwner->getNascimento());
-		$result->bindValue(6,$pOwner->getSexo());
-		$result->bindValue(7,$pOwner->getEmail());
-		//$result->bindValue(8,$id);
-		
-		
-		$result->execute();
-		echo "funcao atualizar chegou ao fim";
-	}
-	
+
 	public function excluir($codigo)
 	{
 		$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
-		$resultado->bindParam(1,$codigo);
+		$resultado->bindValue(1,$codigo);
 		$resultado->execute();
 		echo "<br>Usuario excluido<br>";
 	}
-	
-	
-
-/*	public function lista()
-	{	
-		//efetuando consulta sem passagem de parametro
-		//variavel $resultado será populada
-		$resultado=$this->conex->getConnection()->query('select * from dono');				
-
-		//resgatando o resultado da consulta linha a linha(fetch)
-		//cada linha é tratada como um objeto
-		while($linha=$resultado->fetch(PDO::FETCH_OBJ)){
-			echo $linha->codigo."<br>";
-			echo $linha->nome."<br>";
-			echo $linha->sobrenome."<br>";
-			echo $linha->email."<br>";
-			echo "<br>----<br>";
-		}
-	}*/
 }
-
-//$testeDono = new Dono();
-
-//$teste = new DonoConBD();
-//$teste->lista();
-//$search = "b";
-//$teste->buscaUsuario($search);
-//$teste->lista();
 ?>
