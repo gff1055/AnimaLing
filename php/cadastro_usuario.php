@@ -33,17 +33,17 @@ $owner=new Dono();
 	<?php
 	
 		
-	$owner->setNome("firstName26");
-	$owner->setSobreNome("lastName26");
-	$owner->setUsuario("user26");
-	$owner->setSenha("password26");
-	$objAuxData = new DateTime('2017-07-26');
+	$owner->setNome("firstName27");
+	$owner->setSobreNome("lastName27");
+	$owner->setUsuario("user271");
+	$owner->setSenha("password27");
+	$objAuxData = new DateTime('2017-07-27');
 	$owner->setNascimento($objAuxData->format('y/m/d'));
 	//$owner->setNascimento("2012-17-07");
-	$owner->setSexo("F");
-	$owner->setEmail("email26@email26.com");
+	$owner->setSexo("M");
+	$owner->setEmail("email271@email271.com");
 		
-	$testRegister->alteracao($owner,$testRegister::CADASTRO);
+	echo $testRegister->alteracao($owner,$testRegister::CADASTRO);
 		
 		/*switch($testFeedBack){
 			

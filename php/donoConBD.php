@@ -76,7 +76,7 @@ class DonoConBD
 	}
 	
 	
-	public function existe($campo, $dado){
+	private function existe($campo, $dado, $t){
 		
 		//PREPARACAO DA QUERY DE BUSCA
 		$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
@@ -88,55 +88,43 @@ class DonoConBD
 		$result->execute();
 		
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
-		if($result->rowCount()>0){
-			throw new exception("o $campo existe");
+		if($result->rowCount()>$t){
+			return true;
 			//return self::USER_EXISTS;
 		}
 		
 		//RETORNA SE O USUARIO NAO EXISTE		
 		else{
-			echo "$campo $dado nao existe";
+			return false;
 			//return self::USER_NOT_EXISTS;
 		}
 	}
 	
 	
-	public function checkEmail($pEmail){
-		
-		
-		//PREPARACAO DA QUERY DE BUSCA
-		$result=$this->conex->getConnection()->prepare("select * from dono where email=?");
-		
-		//EFETUANDO BIND DE VALORES NA QUERY
-		$result->bindValue(1,$pEmail);
-
-		//EXECUCAO DA QUERY COM OS VALORES
-		$result->execute();
-		
-		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
-		//SE HOUVER OCORRENCIA, O EMAIL EXISTE
-		if($result->rowCount()>0){
-			return self::EMAIL_EXISTS;
-		}
-		
-		//RETORNA SE O EMAIL NAO EXISTIR
-		else{
-			return self::EMAIL_ALLOWED;
-		}
-	}
+	
 
 	public function alteracao($pOwner, $pCodigo){
 
 		try{
+
 			//VERIFICA SE A ALTERACAO NO BANCO É UM CADASTRO
 			if($pCodigo==self::CADASTRO){
+
+				if($this->existe("usuario",$pOwner->getUsuario(),0)){
+					return "ERRO: USUARIO JA CADASTRADO";
+				}
+				
+				elseif($this->existe("email",$pOwner->getEmail(),0)){
+					return "ERRO: EMAIL JA CADASTRADO";
+				}
+
 				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
 			}
+
 			//NO CASO DE ATUALIZACAO DE DADOS
 			else{
 				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
 				$result->bindValue(8,$pCodigo);
-
 			}
 
 			// VALORES A SEREM PASSADOS PARA A QUERY
@@ -150,6 +138,8 @@ class DonoConBD
 			
 			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 			$result->execute();
+
+			return "alteracao feita";
 
 		}catch(PDOException $erro){
 			echo "erro: ".$erro->getMessage();
