@@ -35,15 +35,15 @@ $owner=new Dono();
 		
 	$owner->setNome("firstName27");
 	$owner->setSobreNome("lastName27");
-	$owner->setUsuario("user271");
+	$owner->setUsuario("b");
 	$owner->setSenha("password27");
 	$objAuxData = new DateTime('2017-07-27');
 	$owner->setNascimento($objAuxData->format('y/m/d'));
 	//$owner->setNascimento("2012-17-07");
 	$owner->setSexo("M");
-	$owner->setEmail("email271@email271.com");
+	$owner->setEmail("email031@email.com");
 		
-	echo $testRegister->alteracao($owner,$testRegister::CADASTRO);
+	echo $testRegister->alteracao($owner);
 		
 		/*switch($testFeedBack){
 			

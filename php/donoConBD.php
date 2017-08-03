@@ -8,23 +8,9 @@ class DonoConBD
 	// variavel para conexao com o banco de dados
 	private $conex;
 	
-	/*const NO_RESULTS = -1;
-	const BLANK = 0;*/
-	
-	/*const EMAIL_EXISTS = 0;
-	const EMAIL_INVALID = -1;
-	const EMAIL_ALLOWED = 1;*/
-	
-	/*const USER_EXISTS = 0;
-	const USER_SUCCESS = 1;*/
 
-	const EMAIL_JA_CADASTRADO = 0;
-	const USUARIO_JA_CADASTRADO = 0;
-
-	const INFO_OK = 1;
-		
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
-	const CADASTRO = -1;
+	const PARA_CADASTRO = -1;
 	
 	//construtor da classe
 	function __construct()
@@ -36,8 +22,7 @@ class DonoConBD
 	public function buscaUsuario($termo)
 	{	
 		
-		//if($termo=="") return self::BLANK;
-		
+			
 		//preparando a query do banco de dados
 		$resultado=$this->conex->getConnection()->prepare("select * from dono where nome like ? or sobrenome like ?");
 		//RESULTADO=CONEXAO->prepare("SENTENCA SQL")
@@ -81,10 +66,18 @@ class DonoConBD
 	}
 	
 	
-	private function existe($campo, $dado){
+	private function existe($campo, $dado, $codigo){
 		
-		//PREPARACAO DA QUERY DE BUSCA
-		$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
+		if($codigo == self::PARA_CADASTRO){
+			//PREPARACAO DA QUERY DE BUSCA
+			$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
+		}
+
+		else{
+			$result=$this->conex->getConnection()->prepare("select * from dono where $campo=? and codigo=?");
+			$result->bindValue(2,$codigo);
+		}
+		
 		
 		//EFETUANDO BIND DE VALORES NA QUERY
 		$result->bindValue(1,$dado);
@@ -93,7 +86,7 @@ class DonoConBD
 		$result->execute();
 		
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
-		if($result->rowCount()>$t){
+		if($result->rowCount()>0){
 			return true;
 			//return self::USER_EXISTS;
 		}
@@ -101,62 +94,40 @@ class DonoConBD
 		//RETORNA SE O USUARIO NAO EXISTE		
 		else{
 			return false;
-			//return self::USER_NOT_EXISTS;
 		}
 	}
 
 
-	private function verifica($dono){
+	// verifica se ja tem usuarios com o mesmo nome/email
+	private function verifica($dono, $t){
 
-		$camposInvalidos=array();
-		
-		//PREPARACAO DA QUERY DE BUSCA
-		$resultUsuario=$this->conex->getConnection()->prepare("select * from dono where $usuario=?");
-		$resultEmail=$this->conex->getConnection()->prepare("select * from dono where $email=?");
-		
-		//EFETUANDO BIND DE VALORES NA QUERY
-		$resultUsuario->bindValue(1,$dado->getUsuario());
-		$resultEmail->bindValue(1,$dado->getEmail());
-
-		//EXECUCAO DA QUERY COM OS VALORES
-		$resultUsuario->execute();
-		$resultEmail->execute();
-		
-		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
-		if($resultUsuario->rowCount()>0){
-			array_push($camposInvalidos, "usuario");
+		if($this->existe("email", $dono->getEmail(),$t)){
+	
+			return "O EMAIL EXISTE";
+	
 		}
-
-		if($resultEmail->rowCount()>0){
-			array_push($camposInvalidos, "email");
+	
+		elseif($this->existe("usuario", $dono->getUsuario(),$t)){
+	
+			return "O USUARIO EXISTE";
+	
 		}
+	
+		else return 0;
 		
-		return $camposInvalidos;
 	}
-	
-	
 	
 
 	public function alteracao($pOwner){
 
 		try{
 
-			//VERIFICA SE A ALTERACAO NO BANCO É UM CADASTRO
-			//if($pCodigo==self::CADASTRO){
+			$haErro = $this->verifica($pOwner, self::PARA_CADASTRO);
 
-				$situacao = verifica($pOwner);
-
-				if($situacao == self::JA_CADASTRADO)
-
-				if($this->existe("usuario",$pOwner->getUsuario())){
-					return "ERRO: USUARIO JA CADASTRADO";
-				}
-				
-				elseif($this->existe("email",$pOwner->getEmail())){
-					return "ERRO: EMAIL JA CADASTRADO";
-				}
-
-				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+			if($haErro)
+				return $haErro;
+			
+			$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
 			//}
 
 			//NO CASO DE ATUALIZACAO DE DADOS
