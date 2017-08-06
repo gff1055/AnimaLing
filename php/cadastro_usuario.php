@@ -35,7 +35,7 @@ $owner=new Dono();
 		
 	$owner->setNome("firstName27");
 	$owner->setSobreNome("lastName27");
-	$owner->setUsuario("b");
+	$owner->setUsuario("b6");
 	$owner->setSenha("password27");
 	$objAuxData = new DateTime('2017-07-27');
 	$owner->setNascimento($objAuxData->format('y/m/d'));

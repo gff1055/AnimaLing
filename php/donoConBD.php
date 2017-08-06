@@ -66,24 +66,40 @@ class DonoConBD
 	}
 	
 	
-	private function existe($campo, $dado, $codigo){
+	//private function existe($campo, $dado, $tipo, $codigo){
+	//private function existe($campo, $dado, $tipo){
+
+	private function existe(){
+
+		$campo = func_get_arg(0);
+		$dado = func_get_arg(1);
+		$tipo = func_get_arg(2);
+
+		if(func_num_args() == 4){
+			$codigo = func_get_arg(3);
+		}
 		
-		if($codigo == self::PARA_CADASTRO){
-			//PREPARACAO DA QUERY DE BUSCA
-			$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
+		try{
+
+			if($tipo == self::PARA_CADASTRO){
+				//PREPARACAO DA QUERY DE BUSCA
+				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
+			}
+
+			elseif($tipo == self::PARA_ATUALIZACAO){
+				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=? and codigo<>?");
+				$result->bindValue(2,$codigo);
+			}
+
+			//EFETUANDO BIND DE VALORES NA QUERY
+			$result->bindValue(1,$dado);
+
+			//EXECUCAO DA QUERY COM OS VALORES
+			$result->execute();
+		}catch(PDOException $erro){
+			echo "ERRO: ".$erro->getmessage();
 		}
 
-		else{
-			$result=$this->conex->getConnection()->prepare("select * from dono where $campo=? and codigo=?");
-			$result->bindValue(2,$codigo);
-		}
-		
-		
-		//EFETUANDO BIND DE VALORES NA QUERY
-		$result->bindValue(1,$dado);
-
-		//EXECUCAO DA QUERY COM OS VALORES
-		$result->execute();
 		
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
 		if($result->rowCount()>0){
@@ -99,15 +115,15 @@ class DonoConBD
 
 
 	// verifica se ja tem usuarios com o mesmo nome/email
-	private function verifica($dono, $t){
+	private function verifica($dono, $tipo){
 
-		if($this->existe("email", $dono->getEmail(),$t)){
+		if($this->existe("email", $dono->getEmail(),$tipo)){
 	
 			return "O EMAIL EXISTE";
 	
 		}
 	
-		elseif($this->existe("usuario", $dono->getUsuario(),$t)){
+		elseif($this->existe("usuario", $dono->getUsuario(),$tipo)){
 	
 			return "O USUARIO EXISTE";
 	
