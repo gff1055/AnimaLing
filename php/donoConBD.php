@@ -11,6 +11,7 @@ class DonoConBD
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
 	const PARA_CADASTRO = -1;
+	const PARA_ATUALIZACAO = -2;
 	
 	//construtor da classe
 	function __construct()
@@ -64,31 +65,22 @@ class DonoConBD
 		
 		return $arr;
 	}
-	
-	
+
 	//private function existe($campo, $dado, $tipo, $codigo){
 	//private function existe($campo, $dado, $tipo){
 
-	private function existe(){
+	public function existe($campo,$dado,$codigoAlteracao){
 
-		$campo = func_get_arg(0);
-		$dado = func_get_arg(1);
-		$tipo = func_get_arg(2);
-
-		if(func_num_args() == 4){
-			$codigo = func_get_arg(3);
-		}
-		
 		try{
 
-			if($tipo == self::PARA_CADASTRO){
+			if($codigoAlteracao == self::PARA_CADASTRO){
 				//PREPARACAO DA QUERY DE BUSCA
 				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
 			}
 
-			elseif($tipo == self::PARA_ATUALIZACAO){
+			else{
 				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=? and codigo<>?");
-				$result->bindValue(2,$codigo);
+				$result->bindValue(2,$codigoAlteracao);
 			}
 
 			//EFETUANDO BIND DE VALORES NA QUERY
@@ -104,7 +96,6 @@ class DonoConBD
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
 		if($result->rowCount()>0){
 			return true;
-			//return self::USER_EXISTS;
 		}
 		
 		//RETORNA SE O USUARIO NAO EXISTE		
@@ -115,18 +106,18 @@ class DonoConBD
 
 
 	// verifica se ja tem usuarios com o mesmo nome/email
-	private function verifica($dono, $tipo){
+	public function verifica($dono, $codigoAlteracao){
 
-		if($this->existe("email", $dono->getEmail(),$tipo)){
-	
+		if($codigoAlteracao == self::PARA_ATUALIZACAO){
+			$codigoAlteracao=$dono->getCodigo();
+		}
+
+		if($this->existe("email", $dono->getEmail(),$codigoAlteracao)){
 			return "O EMAIL EXISTE";
-	
 		}
 	
-		elseif($this->existe("usuario", $dono->getUsuario(),$tipo)){
-	
+		elseif($this->existe("usuario", $dono->getUsuario(),$codigoAlteracao)){
 			return "O USUARIO EXISTE";
-	
 		}
 	
 		else return 0;
@@ -134,23 +125,24 @@ class DonoConBD
 	}
 	
 
-	public function alteracao($pOwner){
+	public function alteracao($pOwner, $tipo){
 
 		try{
 
-			$haErro = $this->verifica($pOwner, self::PARA_CADASTRO);
+			$haErro = $this->verifica($pOwner, $tipo);
 
 			if($haErro)
 				return $haErro;
 			
-			$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-			//}
+			if($tipo == self::PARA_CADASTRO)
+				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+			
 
 			//NO CASO DE ATUALIZACAO DE DADOS
-			/*else{
+			elseif($tipo == self::PARA_ATUALIZACAO){
 				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-				$result->bindValue(8,$pCodigo);
-			}*/
+				$result->bindValue(8,$pOwner->getCodigo());
+			}
 
 			// VALORES A SEREM PASSADOS PARA A QUERY
 			$result->bindValue(1,$pOwner->getUsuario());
