@@ -3,7 +3,7 @@
 require_once("conexao.php");
 require_once("dono.php");
 
-class DonoConBD
+class ModelDono
 {
 	// variavel para conexao com o banco de dados
 	private $conex;
@@ -70,13 +70,17 @@ class DonoConBD
 	//private function existe($campo, $dado, $tipo, $codigo){
 	//private function existe($campo, $dado, $tipo){
 
+	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
 	public function existe($campo,$dado,$codigoAlteracao){
 
 		try{
 
+			//VERIFICANDO SE A FUNCAO ESTA ASSOCIADA, CADSTRO, EXCLUSAO OU ATUALIZACAO
 			if($codigoAlteracao == self::PARA_CADASTRO || $codigoAlteracao == self::PARA_EXCLUSAO){
+
 				//PREPARACAO DA QUERY DE BUSCA
 				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
+
 			}
 
 			else{
@@ -113,10 +117,12 @@ class DonoConBD
 			$codigoAlteracao=$dono->getCodigo();
 		}
 
+		//existe o email
 		if($this->existe("email", $dono->getEmail(),$codigoAlteracao)){
 			return "O EMAIL EXISTE";
 		}
 	
+		//existe o usuario
 		elseif($this->existe("usuario", $dono->getUsuario(),$codigoAlteracao)){
 			return "O USUARIO EXISTE";
 		}
@@ -125,21 +131,24 @@ class DonoConBD
 		
 	}
 	
-
+	//funcao que efetua alguma alteracao no banco (cadastro, atualizacao ou exclusao)
 	public function alteracao($pOwner, $tipo){
 
 		try{
 
+			//verifica se os dados passados estao certos ou duplicados
 			$haErro = $this->verifica($pOwner, $tipo);
 
+			//no caso de haver erro
 			if($haErro)
 				return $haErro;
 			
+			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 			if($tipo == self::PARA_CADASTRO)
 				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
 			
 
-			//NO CASO DE ATUALIZACAO DE DADOS
+			//CARREGA A QUERY DE UPDATE SE O TIPO DE ALTERACAO FOR UMA ATUALIZACAO
 			elseif($tipo == self::PARA_ATUALIZACAO){
 				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
 				$result->bindValue(8,$pOwner->getCodigo());
@@ -164,23 +173,30 @@ class DonoConBD
 		}
 	}
 		
-
+	//
 	public function excluir($codigo)
 	{
-		try{
-			$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
-			$resultado->bindValue(1,$codigo);
-			$resultado->execute();
-		}catch(PDOException $erro){
-			return $erro->getMessage();
-		}
+		$excluido = false;
+		if($this->existe("codigo", $codigo, ModelDono::PARA_EXCLUSAO)){
 
-			if($this->existe("codigo", $codigo, DonoConBD::PARA_EXCLUSAO))
-			{
-				return "O usuario nao foi excluido";
+			try{
+				$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
+				$resultado->bindValue(1,$codigo);
+				$resultado->execute();
+				$excluido = true;
+			}catch(PDOException $erro){
+				return "Erro inesperado da aplicacao";
 			}
-			
-			else "Usuario excluido";
+		}
+		else return "usuario nao existe";
+
+		if($excluido){
+			return "usuario excluido";
+		}
+		
+		else{
+			return "usuario nao foi excluido";
+		}
 	}
 }
 ?>
