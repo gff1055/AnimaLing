@@ -12,6 +12,7 @@ class DonoConBD
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
 	const PARA_CADASTRO = -1;
 	const PARA_ATUALIZACAO = -2;
+	const PARA_EXCLUSAO = -3;
 	
 	//construtor da classe
 	function __construct()
@@ -73,7 +74,7 @@ class DonoConBD
 
 		try{
 
-			if($codigoAlteracao == self::PARA_CADASTRO){
+			if($codigoAlteracao == self::PARA_CADASTRO || $codigoAlteracao == self::PARA_EXCLUSAO){
 				//PREPARACAO DA QUERY DE BUSCA
 				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
 			}
@@ -166,10 +167,20 @@ class DonoConBD
 
 	public function excluir($codigo)
 	{
-		$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
-		$resultado->bindValue(1,$codigo);
-		$resultado->execute();
-		echo "<br>Usuario excluido<br>";
+		try{
+			$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
+			$resultado->bindValue(1,$codigo);
+			$resultado->execute();
+		}catch(PDOException $erro){
+			return $erro->getMessage();
+		}
+
+			if($this->existe("codigo", $codigo, DonoConBD::PARA_EXCLUSAO))
+			{
+				return "O usuario nao foi excluido";
+			}
+			
+			else "Usuario excluido";
 	}
 }
 ?>
