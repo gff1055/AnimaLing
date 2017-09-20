@@ -10,9 +10,9 @@ class ModelDono
 	
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
-	const PARA_CADASTRO = -1;
-	const PARA_ATUALIZACAO = -2;
-	const PARA_EXCLUSAO = -3;
+	const PARA_CADASTRAR = -1;
+	const PARA_ATUALIZAR = -2;
+	const PARA_EXCLUIR = -3;
 	
 	//construtor da classe
 	function __construct()
@@ -71,25 +71,25 @@ class ModelDono
 	//private function existe($campo, $dado, $tipo){
 
 	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
-	public function existe($campo,$dado,$codigoAlteracao){
+	public function existe($campo,$dado,$codOcorrencia){
 
+		$query = "select * from dono where $campo=?";
 		try{
 
-			//VERIFICANDO SE A FUNCAO ESTA ASSOCIADA, CADSTRO, EXCLUSAO OU ATUALIZACAO
-			if($codigoAlteracao == self::PARA_CADASTRO || $codigoAlteracao == self::PARA_EXCLUSAO){
-
-				//PREPARACAO DA QUERY DE BUSCA
-				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=?");
-
+			
+			if($codOcorrencia == ModelDono::PARA_CADASTRAR){
+				$result=$this->conex->getConnection()->prepare($query);
 			}
 
 			else{
-				$result=$this->conex->getConnection()->prepare("select * from dono where $campo=? and codigo<>?");
-				$result->bindValue(2,$codigoAlteracao);
+				$query = $query." and codigo<>?";
+				$result=$this->conex->getConnection()->prepare($query);
+				$result->bindValue(2,$codOcorrencia);
 			}
 
 			//EFETUANDO BIND DE VALORES NA QUERY
 			$result->bindValue(1,$dado);
+						
 
 			//EXECUCAO DA QUERY COM OS VALORES
 			$result->execute();
@@ -111,19 +111,19 @@ class ModelDono
 
 
 	// verifica se ja tem usuarios com o mesmo nome/email
-	public function verifica($dono, $codigoAlteracao){
+	public function verifica($dono, $codOcorrencia){
 
-		if($codigoAlteracao == self::PARA_ATUALIZACAO){
-			$codigoAlteracao=$dono->getCodigo();
+		if($codOcorrencia == ModelDono::PARA_ATUALIZAR){
+			$codOcorrencia = $dono->getCodigo();
 		}
 
 		//existe o email
-		if($this->existe("email", $dono->getEmail(),$codigoAlteracao)){
+		if($this->existe("email", $dono->getEmail(),$codOcorrencia)){
 			return "O EMAIL EXISTE";
 		}
 	
 		//existe o usuario
-		elseif($this->existe("usuario", $dono->getUsuario(),$codigoAlteracao)){
+		elseif($this->existe("usuario", $dono->getUsuario(),$codOcorrencia)){
 			return "O USUARIO EXISTE";
 		}
 	
@@ -132,41 +132,70 @@ class ModelDono
 	}
 	
 	//funcao que efetua alguma alteracao no banco (cadastro, atualizacao ou exclusao)
-	public function alteracao($pOwner, $tipo){
+	public function cadastrar($pDados){
 
 		try{
 
 			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($pOwner, $tipo);
+			$haErro = $this->verifica($pDados, ModelDono::PARA_CADASTRAR);
 
 			//no caso de haver erro
 			if($haErro)
 				return $haErro;
 			
 			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-			if($tipo == self::PARA_CADASTRO)
-				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+			$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
 			
-
-			//CARREGA A QUERY DE UPDATE SE O TIPO DE ALTERACAO FOR UMA ATUALIZACAO
-			elseif($tipo == self::PARA_ATUALIZACAO){
-				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-				$result->bindValue(8,$pOwner->getCodigo());
-			}
-
 			// VALORES A SEREM PASSADOS PARA A QUERY
-			$result->bindValue(1,$pOwner->getUsuario());
-			$result->bindValue(2,$pOwner->getSenha());
-			$result->bindValue(3,$pOwner->getNome());
-			$result->bindValue(4,$pOwner->getSobrenome());
-			$result->bindValue(5,$pOwner->getNascimento());
-			$result->bindValue(6,$pOwner->getSexo());
-			$result->bindValue(7,$pOwner->getEmail());
+			$result->bindValue(1,$pDados->getUsuario());
+			$result->bindValue(2,$pDados->getSenha());
+			$result->bindValue(3,$pDados->getNome());
+			$result->bindValue(4,$pDados->getSobrenome());
+			$result->bindValue(5,$pDados->getNascimento());
+			$result->bindValue(6,$pDados->getSexo());
+			$result->bindValue(7,$pDados->getEmail());
 			
 			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 			$result->execute();
 
-			return "alteracao feita";
+			return "cadastro feito";
+
+		}catch(PDOException $erro){
+			echo "erro: ".$erro->getMessage();
+		}
+	}
+
+
+	//funcao que efetua alguma alteracao no banco (cadastro, atualizacao ou exclusao)
+	public function atualizar($pDados){
+
+		try{
+
+			//verifica se os dados passados estao certos ou duplicados
+			$haErro = $this->verifica($pDados, self::PARA_ATUALIZAR);
+
+			//no caso de haver erro
+			if($haErro)
+				return $haErro;
+			
+			$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
+			
+		
+
+			// VALORES A SEREM PASSADOS PARA A QUERY
+			$result->bindValue(1,$pDados->getUsuario());
+			$result->bindValue(2,$pDados->getSenha());
+			$result->bindValue(3,$pDados->getNome());
+			$result->bindValue(4,$pDados->getSobrenome());
+			$result->bindValue(5,$pDados->getNascimento());
+			$result->bindValue(6,$pDados->getSexo());
+			$result->bindValue(7,$pDados->getEmail());
+			$result->bindValue(8,$pDados->getCodigo());
+
+			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+			$result->execute();
+
+			return "atualizacao feita";
 
 		}catch(PDOException $erro){
 			echo "erro: ".$erro->getMessage();
@@ -177,7 +206,7 @@ class ModelDono
 	public function excluir($codigo)
 	{
 		$excluido = false;
-		if($this->existe("codigo", $codigo, ModelDono::PARA_EXCLUSAO)){
+		if($this->existe("codigo", $codigo, ModelDono::PARA_EXCLUIR)){
 
 			try{
 				$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
