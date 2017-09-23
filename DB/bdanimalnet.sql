@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 30-Jun-2017 às 22:11
--- Versão do servidor: 10.1.22-MariaDB
--- PHP Version: 7.1.4
+-- Generation Time: 22-Set-2017 às 22:11
+-- Versão do servidor: 10.1.25-MariaDB
+-- PHP Version: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -33,8 +33,17 @@ CREATE TABLE `animal` (
   `codigoUsuario` int(11) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `especie` varchar(255) NOT NULL,
+  `sexo` varchar(3) NOT NULL,
   `nascimento` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `animal`
+--
+
+INSERT INTO `animal` (`codigo`, `codigoUsuario`, `nome`, `especie`, `sexo`, `nascimento`) VALUES
+(1, 8, 'Fido', 'Gato', 'M', '2016-01-08'),
+(3, 16, 'Bustica', 'Rato', 'M', '2015-12-07');
 
 -- --------------------------------------------------------
 
@@ -60,9 +69,17 @@ CREATE TABLE `dono` (
 INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimento`, `sexo`, `email`) VALUES
 (2, 'b', 'b', 'b', 'b', '2017-05-02', NULL, 'b@b.com'),
 (3, 'c', 'c', 'c', 'c', '2017-05-03', NULL, 'c@c.com.br'),
-(4, 'henri', 'henrisenha', 'henrique', 'dourado', '2017-06-15', NULL, 'henriquedourado@hotmal.com'),
-(5, 'lucca', 'lucca', 'lucas', 'Cardoso', '2017-06-14', NULL, 'lucca@hotmail.com'),
-(6, 'bia', 'bia', 'Maria', 'beatriz', '2017-06-13', NULL, 'bia@gmail.com');
+(4, 'henri2', 'henrisenha', 'henrique2', 'dourado2', '2017-07-17', 'M', 'henriquedourado2@hotmal.com'),
+(6, 'bia', 'bia', 'Maria', 'beatriz', '2017-06-13', NULL, 'bia@gmail.com'),
+(7, 'Cambia', 'camilabeatriz', 'Camila', 'Beatriz', '2017-09-21', 'F', 'camilabeatriz@gmail.com'),
+(8, 'Brube', 'brunobernardo', 'Bruno', 'Bernardo', '2016-09-21', 'M', 'brunobernardo@gmail.com'),
+(10, 'user28', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email26@email26.com'),
+(11, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
+(12, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
+(13, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
+(14, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
+(15, 'user03', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email03@email.com'),
+(16, 'MigMath', 'miguelmatheus', 'Miguel', 'Matheus', '2017-09-20', 'M', 'miguelmatheus@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -85,7 +102,8 @@ CREATE TABLE `status` (
 -- Indexes for table `animal`
 --
 ALTER TABLE `animal`
-  ADD PRIMARY KEY (`codigo`);
+  ADD PRIMARY KEY (`codigo`),
+  ADD KEY `dono_id_fk` (`codigoUsuario`);
 
 --
 -- Indexes for table `dono`
@@ -98,10 +116,25 @@ ALTER TABLE `dono`
 --
 
 --
+-- AUTO_INCREMENT for table `animal`
+--
+ALTER TABLE `animal`
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `dono`
 --
 ALTER TABLE `dono`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;COMMIT;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Limitadores para a tabela `animal`
+--
+ALTER TABLE `animal`
+  ADD CONSTRAINT `dono_id_fk` FOREIGN KEY (`codigoUsuario`) REFERENCES `dono` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
