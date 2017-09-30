@@ -3,28 +3,28 @@
 require_once("conexao.php");
 require_once("dono.php");
 
-class ModelDono
-{
+class ModelDono{
 	// variavel para conexao com o banco de dados
 	private $conex;
 	
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
-	const PARA_CADASTRAR = -1;
-	const PARA_ATUALIZAR = -2;
-	const PARA_EXCLUIR = -3;
+	const NOVO_CADASTRO = -1;
+	const ALTERACAO_DADOS = -2;
+	const EXCLUSAO = -3;
 	
 	//construtor da classe
-	function __construct()
-	{
+	function __construct(){
 		$this->conex=new Conexao();
 	}
 
+	function __destruct(){
+		$this->conex = null;
+	}
+
 	
-	public function buscaUsuario($termo)
-	{	
-		
-			
+	public function buscaUsuario($termo){	
+					
 		//preparando a query do banco de dados
 		$resultado=$this->conex->getConnection()->prepare("select * from dono where nome like ? or sobrenome like ?");
 		//RESULTADO=CONEXAO->prepare("SENTENCA SQL")
@@ -71,13 +71,13 @@ class ModelDono
 	//private function existe($campo, $dado, $tipo){
 
 	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
-	public function existe($campo,$dado,$codOcorrencia){
+	private function existe($campo,$dado,$codOcorrencia){
 
 		$query = "select * from dono where $campo=?";
 		try{
 
 			
-			if($codOcorrencia == ModelDono::PARA_CADASTRAR){
+			if($codOcorrencia == ModelDono::NOVO_CADASTRO || $codOcorrencia == ModelDono::EXCLUSAO){
 				$result=$this->conex->getConnection()->prepare($query);
 			}
 
@@ -111,10 +111,15 @@ class ModelDono
 
 
 	// verifica se ja tem usuarios com o mesmo nome/email
-	public function verifica($dono, $codOcorrencia){
+	private function verifica($dono, $codOcorrencia){
 
-		if($codOcorrencia == ModelDono::PARA_ATUALIZAR){
+
+		if($codOcorrencia == ModelDono::ALTERACAO_DADOS){
 			$codOcorrencia = $dono->getCodigo();
+			//existe o usuario
+			if($this->existe("usuario", $dono->getUsuario(),$codOcorrencia)){
+				return "O USUARIO EXISTE";
+			}
 		}
 
 		//existe o email
@@ -122,91 +127,91 @@ class ModelDono
 			return "O EMAIL EXISTE";
 		}
 	
-		//existe o usuario
-		elseif($this->existe("usuario", $dono->getUsuario(),$codOcorrencia)){
-			return "O USUARIO EXISTE";
-		}
-	
 		else return 0;
 		
 	}
-	
-	//funcao que efetua alguma alteracao no banco (cadastro, atualizacao ou exclusao)
-	public function cadastrar($pDados){
 
-		try{
+	public function geraUsuario(){
 
-			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($pDados, ModelDono::PARA_CADASTRAR);
-
-			//no caso de haver erro
-			if($haErro)
-				return $haErro;
-			
-			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-			$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-			
-			// VALORES A SEREM PASSADOS PARA A QUERY
-			$result->bindValue(1,$pDados->getUsuario());
-			$result->bindValue(2,$pDados->getSenha());
-			$result->bindValue(3,$pDados->getNome());
-			$result->bindValue(4,$pDados->getSobrenome());
-			$result->bindValue(5,$pDados->getNascimento());
-			$result->bindValue(6,$pDados->getSexo());
-			$result->bindValue(7,$pDados->getEmail());
-			
-			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
-			$result->execute();
-
-			return "cadastro feito";
-
-		}catch(PDOException $erro){
-			echo "erro: ".$erro->getMessage();
-		}
-	}
-
-
-	//funcao que efetua alguma alteracao no banco (cadastro, atualizacao ou exclusao)
-	public function atualizar($pDados){
-
-		try{
-
-			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($pDados, self::PARA_ATUALIZAR);
-
-			//no caso de haver erro
-			if($haErro)
-				return $haErro;
-			
-			$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-			
+		//preparando e executando a query
+		$result = $this->conex->getConnection()->prepare("select max(codigo) as maiorCodigo from dono");
+		$result->execute();
 		
+		//recebendo o resultado
+		$linha=$result->fetch(PDO::FETCH_OBJ);
 
-			// VALORES A SEREM PASSADOS PARA A QUERY
-			$result->bindValue(1,$pDados->getUsuario());
-			$result->bindValue(2,$pDados->getSenha());
-			$result->bindValue(3,$pDados->getNome());
-			$result->bindValue(4,$pDados->getSobrenome());
-			$result->bindValue(5,$pDados->getNascimento());
-			$result->bindValue(6,$pDados->getSexo());
-			$result->bindValue(7,$pDados->getEmail());
-			$result->bindValue(8,$pDados->getCodigo());
+		//gerando o ID do usuario disponivel
+		$userDisp=$linha->maiorCodigo+1;
+		
+		return "user".$userDisp;
+	}
 
-			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
-			$result->execute();
 
-			return "atualizacao feita";
+	public function atualizar($dono,$operacao){
+		
+		$feedback = null;
+		
+		try{
+		
+			//verifica se os dados passados estao certos ou duplicados
+			$haErro = $this->verifica($dono, $operacao);
+
+
+			//no caso de haver erro
+			if($haErro)
+				$feedback = $haErro;
+
+			else{
+
+				$result = null;
+
+				//se nao houver erro e a operacao for um cadastro
+				if($operacao == ModelDono::NOVO_CADASTRO){
+
+					//gerando o usuario
+					$dono->setUsuario($dono->geraUsuario());
+
+					//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+					$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+					$feedback = "Cadastro feito";
+				}
+
+				//se nao houver erro e a operacao for uma atualizacao
+				elseif($operacao == ModelDono::ALTERACAO_DADOS){
+					
+					//carrega a query de atualizacao
+					$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
+					$result->bindValue(8,$dono->getCodigo());
+					$feedback = "Atualizacao feita";
+				}
+
+				// VALORES A SEREM PASSADOS PARA A QUERY
+				$result->bindValue(1,$dono->getUsuario());
+				$result->bindValue(2,$dono->getSenha());
+				$result->bindValue(3,$dono->getNome());
+				$result->bindValue(4,$dono->getSobrenome());
+				$result->bindValue(5,$dono->getNascimento());
+				$result->bindValue(6,$dono->getSexo());
+				$result->bindValue(7,$dono->getEmail());
+			
+				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+				$result->execute();
+			}
 
 		}catch(PDOException $erro){
 			echo "erro: ".$erro->getMessage();
+			$feedback = "ocorreu um erro inesperado na aplicacao";
+
 		}
+
+		return $feedback;
 	}
+	
 		
 	//
-	public function excluir($codigo)
-	{
+	public function excluir($codigo){
 		$excluido = false;
-		if($this->existe("codigo", $codigo, ModelDono::PARA_EXCLUIR)){
+		if($this->existe("codigo", $codigo, ModelDono::EXCLUSAO)){
 
 			try{
 				$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
@@ -223,9 +228,6 @@ class ModelDono
 			return "usuario excluido";
 		}
 		
-		else{
-			return "usuario nao foi excluido";
-		}
 	}
 }
 ?>

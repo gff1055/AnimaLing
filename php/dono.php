@@ -12,9 +12,9 @@ class Dono{
 	
 	function __construct(){
 		
-		$usuario = "usuario";
-		$nome = "nome";
-		$sobrenome = "sobrenome";
+		$usuario = "";
+		$nome = "";
+		$sobrenome = "";
 		$nascimento = "";
 		$email = "";
 	}

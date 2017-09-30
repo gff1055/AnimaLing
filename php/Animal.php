@@ -1,64 +1,63 @@
 <?php
 class Animal{
 	
-	private $codigoUsuario;
+	private $codigoDono;
 	private $codigo;
 	private $nome;
 	private $especie;
 	private $nascimento;
+	private $sexo;
 	
 	function Animal()
 	{
 		
 	}
 	
-	public function getCodigoDono()
-	{
+	public function getCodigoDono(){
 		return $this->codigoDono;
 	}
 	
-	public function setCodigoDono($pCodigoDono)
-	{
+	public function setCodigoDono($pCodigoDono){
 		$this->codigoDono = $pCodigoDono;
 	}
 	
-	public function getCodigo()
-	{
+	public function getCodigo(){
 		return $this->codigo;
 	}
 	
-	public function setCodigo($pCodigo)
-	{
+	public function setCodigo($pCodigo){
 		$this->codigo = $pCodigo;
 	}
 	
-	public function getNome()
-	{
+	public function getNome(){
 		return $this->nome;
 	}
 	
-	public function setNome($pNome)
-	{
+	public function setNome($pNome){
 		$this->nome = $pNome;
 	}
 	
-	public function getEspecie()
-	{
+	public function getEspecie(){
 		return $this->especie;
 	}
 	
-	public function setEspecie($pEspecie)
-	{
+	public function setEspecie($pEspecie){
 		$this->especie = $pEspecie;
 	}
+
+	public function getSexo(){
+		return $this->sexo;
+	}
 	
-	public function getNascimento()
-	{
+	public function setSexo($pSexo){
+		$this->sexo = $pSexo;
+	}
+	
+	public function getNascimento(){
 		return $this->nascimento;
 	}
 	
-	public function setNascimento($pNascimento)
-	{
+	public function setNascimento($pNascimento){
 		$this->nascimento = $pNascimento;
 	}
 }

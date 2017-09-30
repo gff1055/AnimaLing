@@ -2,23 +2,37 @@
 
 require_once("C:/xampp/php/pear/PHPUnit/testcase.php");
 require_once("../php/ModelDono.php");
+require_once("../php/ModelAnimal.php");
+require_once("../php/Animal.php");
 
 class ClasseTeste extends PHPUnit_Framework_TestCase{
 
 	public function testaExiste(){
-		$teste = new ModelDono();
+		$donoDao = new ModelDono();
 		$owner = new Dono();
+		$animalDao = new ModelAnimal();
+		$animal = new Animal();
+		
 
-		$owner->setCodigo(7);
-		$owner->setNome("Miguel");
-		$owner->setSobreNome("Matheus");
-		$owner->setUsuario("MigMath");
-		$owner->setSenha("miguelmatheus");
-		$objAuxData = new DateTime('2017-09-20');
+		$owner->setCodigo(10);
+///*
+		$owner->setNome("Laura");
+		$owner->setSobreNome("Larissa");
+		//$owner->setUsuario("davied");
+		$owner->setSenha("lauralarissa");
+		$objAuxData = new DateTime('2014-07-19');
 		$owner->setNascimento($objAuxData->format('y/m/d'));
 		//$owner->setNascimento("2012-17-07");
-		$owner->setSexo("M");
-		$owner->setEmail("miguelmatheus@gmail.com");
+		$owner->setSexo("f");
+		$owner->setEmail("lauralarissa@gmail.com");
+//*/
+/*
+		$animal->setNome("Bustica");
+		$animal->setEspecie("Rato");
+		$animal->setSexo("M");
+		$objAuxData = new DateTime('2015-12-07');
+		$animal->setNascimento($objAuxData->format('y/m/d'));
+
 				
 		//um usuario nao cadastrado tenta colocar um email ja existente
 		//$this->assertEquals(true,$teste->existe("email","c@c.com.br",DonoConBD::PARA_CADASTRO));
@@ -44,17 +58,11 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 
 */
 
-		$this->assertEquals(0, $teste->verifica($owner,ModelDono::PARA_ATUALIZAR));
-
-		$owner->setEmail("bia@gmail.com");
-		$owner->setUsuario("4");
-		$this->assertEquals("O EMAIL EXISTE", $teste->verifica($owner,ModelDono::PARA_ATUALIZAR));
-
-
-		$owner->setEmail("bianovinha@gmail.com");
-		$owner->setUsuario("bia");
-		$this->assertEquals("O USUARIO EXISTE", $teste->verifica($owner,ModelDono::PARA_CADASTRAR));
+		//$this->assertEquals("alteracao de dados efeituada", $donoDao->atualizar($owner,ModelDono::NOVO_CADASTRO));
+		$this->assertEquals("alteracao de dados efeituada", $donoDao->gerausuario());
 		
+		//$this->assertEquals("...", $donoDao->excluir("0; Drop Table animal;"));
+		//$this->assertEquals("atualizacao feita", $teste->excluir(1500));
 
 
 //		$this->assertEquals(true, $teste->verifica("email","bia@gmail.com",5));
