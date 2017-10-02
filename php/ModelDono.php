@@ -169,11 +169,11 @@ class ModelDono{
 				if($operacao == ModelDono::NOVO_CADASTRO){
 
 					//gerando o usuario
-					$dono->setUsuario($dono->geraUsuario());
+					$dono->setUsuario($this->geraUsuario());
 
 					//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 					$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-					$feedback = "Cadastro feito";
+					$feedback = "Cadastro";
 				}
 
 				//se nao houver erro e a operacao for uma atualizacao
@@ -182,7 +182,7 @@ class ModelDono{
 					//carrega a query de atualizacao
 					$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
 					$result->bindValue(8,$dono->getCodigo());
-					$feedback = "Atualizacao feita";
+					$feedback = "Atualizacao";
 				}
 
 				// VALORES A SEREM PASSADOS PARA A QUERY
@@ -200,11 +200,11 @@ class ModelDono{
 
 		}catch(PDOException $erro){
 			echo "erro: ".$erro->getMessage();
-			$feedback = "ocorreu um erro inesperado na aplicacao";
+			return "ocorreu um erro inesperado na aplicacao";
 
 		}
 
-		return $feedback;
+		return $feedback." ok!";
 	}
 	
 		

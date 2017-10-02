@@ -14,17 +14,17 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		$animal = new Animal();
 		
 
-		$owner->setCodigo(10);
+		$owner->setCodigo(19);
 ///*
-		$owner->setNome("Laura");
-		$owner->setSobreNome("Larissa");
-		//$owner->setUsuario("davied");
-		$owner->setSenha("lauralarissa");
-		$objAuxData = new DateTime('2014-07-19');
+		$owner->setNome("Henrique");
+		$owner->setSobreNome("Rodrigo");
+		$owner->setUsuario("henro");
+		$owner->setSenha("henriquerodrigo");
+		$objAuxData = new DateTime('2013-06-18');
 		$owner->setNascimento($objAuxData->format('y/m/d'));
 		//$owner->setNascimento("2012-17-07");
-		$owner->setSexo("f");
-		$owner->setEmail("lauralarissa@gmail.com");
+		$owner->setSexo("M");
+		$owner->setEmail("henriquerodrigo@gmail.com");
 //*/
 /*
 		$animal->setNome("Bustica");
@@ -58,8 +58,9 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 
 */
 
-		//$this->assertEquals("alteracao de dados efeituada", $donoDao->atualizar($owner,ModelDono::NOVO_CADASTRO));
-		$this->assertEquals("alteracao de dados efeituada", $donoDao->gerausuario());
+		//$this->assertEquals("alteracao de dados efeituada", $donoDao->atualizar($owner,ModelDono::ALTERACAO_DADOS));
+		$this->assertEquals("alteracao de dados efeituada", $animalDao->excluir(5));
+		//$this->assertEquals("alteracao de dados efeituada", $donoDao->gerausuario());
 		
 		//$this->assertEquals("...", $donoDao->excluir("0; Drop Table animal;"));
 		//$this->assertEquals("atualizacao feita", $teste->excluir(1500));
