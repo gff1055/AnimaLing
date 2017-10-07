@@ -196,6 +196,8 @@ class ModelDono{
 			
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
+
+				$feedback = $feedback." ok!";
 			}
 
 		}catch(PDOException $erro){
@@ -204,7 +206,7 @@ class ModelDono{
 
 		}
 
-		return $feedback." ok!";
+		return $feedback;
 	}
 	
 		

@@ -4,6 +4,7 @@ require_once("C:/xampp/php/pear/PHPUnit/testcase.php");
 require_once("../php/ModelDono.php");
 require_once("../php/ModelAnimal.php");
 require_once("../php/Animal.php");
+require_once("../php/ModelStatus.php");
 
 class ClasseTeste extends PHPUnit_Framework_TestCase{
 
@@ -12,28 +13,32 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		$owner = new Dono();
 		$animalDao = new ModelAnimal();
 		$animal = new Animal();
+		$statusDao = new ModelStatus();
+		$status = new Status();
 		
 
-		$owner->setCodigo(19);
-///*
-		$owner->setNome("Henrique");
-		$owner->setSobreNome("Rodrigo");
-		$owner->setUsuario("henro");
-		$owner->setSenha("henriquerodrigo");
-		$objAuxData = new DateTime('2013-06-18');
-		$owner->setNascimento($objAuxData->format('y/m/d'));
-		//$owner->setNascimento("2012-17-07");
-		$owner->setSexo("M");
-		$owner->setEmail("henriquerodrigo@gmail.com");
-//*/
+	//	$owner->setCodigo(21);
 /*
-		$animal->setNome("Bustica");
-		$animal->setEspecie("Rato");
+		$owner->setNome("Isadora");
+		$owner->setSobreNome("Silva");
+		$owner->setUsuario("user21");
+		$owner->setSenha("isadorasilva");
+		//$objAuxData = new DateTime('2013-06-18');
+		//$owner->setNascimento($objAuxData->format('y/m/d'));
+		$owner->setNascimento('2012-05-17');
+		//$owner->setNascimento("2012-17-07");
+		$owner->setSexo("F");
+		$owner->setEmail("isadorasilva@gmail.com");
+*//*
+		$animal->setCodigo(4);
+		$animal->setNome("Adam");
+		$animal->setEspecie("Gato");
 		$animal->setSexo("M");
-		$objAuxData = new DateTime('2015-12-07');
+		$objAuxData = new DateTime('2013-10-05');
 		$animal->setNascimento($objAuxData->format('y/m/d'));
 
-				
+*/
+		
 		//um usuario nao cadastrado tenta colocar um email ja existente
 		//$this->assertEquals(true,$teste->existe("email","c@c.com.br",DonoConBD::PARA_CADASTRO));
 
@@ -59,7 +64,10 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 */
 
 		//$this->assertEquals("alteracao de dados efeituada", $donoDao->atualizar($owner,ModelDono::ALTERACAO_DADOS));
-		$this->assertEquals("alteracao de dados efeituada", $animalDao->excluir(5));
+		
+		//$this->assertEquals("alteracao de dados efeituada", $animalDao->atualizacao($animal,$owner->getCodigo(),ModelDono::ALTERACAO_DADOS));
+
+		//$this->assertEquals("",$statusDao->exibirTodosStatus(4));
 		//$this->assertEquals("alteracao de dados efeituada", $donoDao->gerausuario());
 		
 		//$this->assertEquals("...", $donoDao->excluir("0; Drop Table animal;"));
@@ -71,6 +79,8 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 //		$this->assertEquals(false, $teste->verifica("usuario","z",6));
 //		$this->assertEquals(true, $teste->verifica("usuario","bia",5));
 
+		$this->assertEquals("alteracao de dados efeituada", $status->setDataStatus());
+		
 
 		
 		

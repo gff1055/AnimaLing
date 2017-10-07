@@ -1,7 +1,6 @@
 <?php
 class Status{
 	
-	private $codigoDono;
 	private $codigoAnimal;
 	private $conteudo;
 	private $dataStatus;
@@ -11,54 +10,30 @@ class Status{
 		
 	}
 	
-	public function getCodigoDono()
-	{
-		return $this->codigoDono;
-	}
-	
-	public function setCodigoDono($pCodigoDono)
-	{
-		$this->codigoDono = $pCodigoDono;
-	}
-	
-	public function getCodigoAnimal()
-	{
+	public function getCodigoAnimal(){
 		return $this->codigo;
 	}
 	
-	public function setCodigoAnimal($pCodigo)
-	{
+	public function setCodigoAnimal($pCodigo){
 		$this->codigo = $pCodigo;
 	}
 	
-	public function getNome()
-	{
-		return $this->nome;
+	public function getConteudo(){
+		return $this->conteudo;
 	}
 	
-	public function setNome($pNome)
-	{
-		$this->nome = $pNome;
+	public function setConteudo($pConteudo){
+		$this->conteudo = $pConteudo;
 	}
 	
-	public function getEspecie()
-	{
-		return $this->especie;
+	public function getDataStatus(){
+		return $this->dataStatus;
 	}
 	
-	public function setEspecie($pEspecie)
-	{
-		$this->especie = $pEspecie;
-	}
-	
-	public function getNascimento()
-	{
-		return $this->nascimento;
-	}
-	
-	public function setNascimento($pNascimento)
-	{
-		$this->nascimento = $pNascimento;
+	public function setDataStatus(){
+		date_default_timezone_set("America/Sao_Paulo");
+		return $this->dataStatus = date('Y-m-d H:i');
+
 	}
 }
 ?>

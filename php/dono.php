@@ -72,7 +72,9 @@ class Dono{
 	}
 	
 	public function setNascimento($pNascimento){
-		$this->nascimento = $pNascimento;
+
+		$objAuxData = new DateTime($pNascimento);
+		$this->nascimento = $objAuxData->format('y/m/d');
 	}
 	
 	public function getEmail(){

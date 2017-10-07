@@ -32,10 +32,10 @@ class ModelAnimal
 
 	public function atualizacao($pAnimal,$pCodigoDono,$operacao)
 	{
-		$resultado = null;
+		$result = null;
 		$feedback = null;
 		if($operacao == ModelAnimal::NOVO_CADASTRO){
-			$resultado = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
+			$result = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
 			$feedback = "cadastro";
 		}
 		elseif($operacao == ModelAnimal::ALTERACAO_DADOS){
@@ -66,13 +66,13 @@ class ModelAnimal
 		return $feedback." ok";
 	}
 
-	public function cadastrar($pAnimal,$pCodigoDono)
+/*	public function cadastrar($pAnimal,$pCodigoDono)
 	{
 		try{
 
-			/*//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 			$result=$this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
-			*/
+			
 			// VALORES A SEREM PASSADOS PARA A QUERY
 			$result->bindValue(1,$pCodigoDono);
 			$result->bindValue(2,$pAnimal->getNome());
@@ -96,9 +96,9 @@ class ModelAnimal
 	{
 		try{
 
-			/*//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 			$result=$this->conex->getConnection()->prepare("update animal set codigoDono=?, nome=?,especie=?,nascimento=?,sexo=? where codigo=?");
-			*/
+			
 			// VALORES A SEREM PASSADOS PARA A QUERY
 			$result->bindValue(1,$pAnimal->getCodigoDono());
 			$result->bindValue(2,$pAnimal->getNome());
@@ -106,7 +106,7 @@ class ModelAnimal
 			$result->bindValue(4,$pAnimal->getNascimento());
 			$result->bindValue(5,$pAnimal->getSexo());
 			/*$result->bindValue(6,$pAnimal->getCodigo());
-			*/
+			
 			
 			
 			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
@@ -119,6 +119,7 @@ class ModelAnimal
 			echo "erro: ".$erro->getMessage();
 		}
 	}
+	*/
 	
 	public function excluir($codigo)
 	{
