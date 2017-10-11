@@ -6,6 +6,12 @@ require_once("conexao.php");
 class ModelStatus
 {
 	private $conex;
+
+	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
+	const NOVO_CADASTRO = -1;
+	const ALTERACAO_DADOS = -2;
+	const EXCLUSAO = -3;
+	
 	
 	function __construct()
 	{
@@ -43,30 +49,47 @@ class ModelStatus
 
 	public function cadastrar($pStatus,$pCodigoAnimal){
 
-		/*try*/
-			/*prepare*/
-			/*efetuar binsa*/
-			/*execute*/
-			
-		/*catch*/
+		$feedback = null;
 
 		try{
 
 			$resultado=$this->conex->getconnection()->prepare("insert into status(codigoAnimal, conteudo, dataStatus) values (?,?,?)");
+
+			$pStatus->setDataStatus();
+
 			$resultado->bindValue(1,$pCodigoAnimal);
 			$resultado->bindValue(2,$pStatus->getConteudo());
 			$resultado->bindValue(3,$pStatus->getDataStatus());
+			$resultado->execute();
+			$feedback = "cadastro ok";
 
 		}catch(PDOException $erro){
-
+			$feedback = "erro:".$erro->getMessage();
 		}
 
-
+		return $feedback;
+	
 	}
 	
 	public function atualizar()
 	{
-		
+		$feedback = null;
+
+		try{
+
+			$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
+
+			$resultado->bindValue(1,$pCodigoAnimal);
+			$resultado->bindValue(2,$pStatus->getConteudo());
+			$resultado->bindValue(3,$pStatus->getDataStatus());
+			$resultado->execute();
+			$feedback = "cadastro ok";
+
+		}catch(PDOException $erro){
+			$feedback = "erro:".$erro->getMessage();
+		}
+
+		return $feedback;
 	}
 	
 	public function excluir()

@@ -29,15 +29,19 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		//$owner->setNascimento("2012-17-07");
 		$owner->setSexo("F");
 		$owner->setEmail("isadorasilva@gmail.com");
-*//*
-		$animal->setCodigo(4);
-		$animal->setNome("Adam");
-		$animal->setEspecie("Gato");
-		$animal->setSexo("M");
-		$objAuxData = new DateTime('2013-10-05');
+*/
+		$animal->setCodigo(5);
+		$animal->setCodigoDono(4);
+		$animal->setNome("Alanis");
+		$animal->setEspecie("Cão");
+		$animal->setSexo("F");
+		$objAuxData = new DateTime('2012-09-04');
 		$animal->setNascimento($objAuxData->format('y/m/d'));
 
-*/
+
+		//$status->getCodigoAnimal(3);
+		//$status->setConteudo("Olha! Muito obrigado viu");
+
 		
 		//um usuario nao cadastrado tenta colocar um email ja existente
 		//$this->assertEquals(true,$teste->existe("email","c@c.com.br",DonoConBD::PARA_CADASTRO));
@@ -79,7 +83,16 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 //		$this->assertEquals(false, $teste->verifica("usuario","z",6));
 //		$this->assertEquals(true, $teste->verifica("usuario","bia",5));
 
-		$this->assertEquals("alteracao de dados efeituada", $status->setDataStatus());
+
+		$this->assertEquals(
+			"alteracao ok",
+			$animalDao->atualizacao($animal,ModelAnimal::ALTERACAO_DADOS)
+		);
+
+		/*$this->assertEquals(
+			"alteracao de dados efeituada",
+			$statusDao->cadastrar($status,4)
+		);*/
 		
 
 		

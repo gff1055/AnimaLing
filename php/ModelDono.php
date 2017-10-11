@@ -131,7 +131,7 @@ class ModelDono{
 		
 	}
 
-	public function geraUsuario(){
+	private function geraUsuario(){
 
 		//preparando e executando a query
 		$result = $this->conex->getConnection()->prepare("select max(codigo) as maiorCodigo from dono");

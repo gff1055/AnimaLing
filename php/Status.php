@@ -1,6 +1,7 @@
 <?php
 class Status{
 	
+	private $codigo;
 	private $codigoAnimal;
 	private $conteudo;
 	private $dataStatus;
@@ -10,12 +11,21 @@ class Status{
 		
 	}
 	
-	public function getCodigoAnimal(){
+
+	public function getCodigo(){
 		return $this->codigo;
 	}
-	
-	public function setCodigoAnimal($pCodigo){
+
+	public function setCodigo($pCodigo){
 		$this->codigo = $pCodigo;
+	}
+
+	public function getCodigoAnimal(){
+		return $this->codigoAnimal;
+	}
+	
+	public function setCodigoAnimal($pCodigoAnimal){
+		$this->codigoAnimal = $pCodigoAnimal;
 	}
 	
 	public function getConteudo(){
@@ -32,7 +42,7 @@ class Status{
 	
 	public function setDataStatus(){
 		date_default_timezone_set("America/Sao_Paulo");
-		return $this->dataStatus = date('Y-m-d H:i');
+		$this->dataStatus = date('Y-m-d H:i');
 
 	}
 }
