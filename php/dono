@@ -6,44 +6,39 @@ class Dono{
 	private $sobrenome;
 	private $nascimento;
 	private $email;
+	private $senha;
+	private $sexo;
 	
 	function Dono()
 	{
 		
 	}
 	
-	public function getCodigo()
-	{
+	public function getCodigo(){
 		return $this->codigo;
 	}
 	
-	public function setCodigo($pCodigo)
-	{
+	public function setCodigo($pCodigo){
 		$this->codigo = $pCodigo;
 	}
 	
-	public function getNome()
-	{
+	public function getNome(){
 		return $this->nome;
 	}
 	
-	public function setNome($pNome)
-	{
+	public function setNome($pNome){
 		$this->nome = $pNome;
 	}
 	
-	public function getSobrenome()
-	{
+	public function getSobrenome(){
 		return $this->sobrenome;
 	}
 	
-	public function setSobrenome($pSobrenome)
-	{
+	public function setSobrenome($pSobrenome){
 		$this->sobrenome = $pSobrenome;
 	}
 	
-	public function getNascimento()
-	{
+	public function getNascimento(){
 		return $this->nascimento;
 	}
 	
@@ -52,14 +47,28 @@ class Dono{
 		$this->nascimento = $pNascimento;
 	}
 	
-	public function getEmail()
-	{
+	public function getEmail(){
 		return $this->email;
 	}
 	
-	public function setEmail($pEmail)
-	{
+	public function setEmail($pEmail){
 		$this->email = $pEmail;
+	}
+
+	public function getSenha(){
+		return $this->senha;
+	}
+	
+	public function setSenha($pSenha){
+		$this->senha = $pSenha;
+	}
+
+	public function getSexo(){
+		return $this->sexo;
+	}
+	
+	public function setSexo($pSexo){
+		$this->sexo = $pSexo;
 	}
 }
 ?>

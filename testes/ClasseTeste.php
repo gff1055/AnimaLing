@@ -10,98 +10,144 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 
 	public function testaExiste(){
 		$donoDao = new ModelDono();
+		
 		$owner = new Dono();
+		$owner2 = new Dono();
+		
 		$animalDao = new ModelAnimal();
+		
 		$animal = new Animal();
+		$animal2 = new Animal();
+		
 		$statusDao = new ModelStatus();
 		$status = new Status();
 		
 
-	//	$owner->setCodigo(21);
-/*
-		$owner->setNome("Isadora");
-		$owner->setSobreNome("Silva");
-		$owner->setUsuario("user21");
-		$owner->setSenha("isadorasilva");
-		//$objAuxData = new DateTime('2013-06-18');
-		//$owner->setNascimento($objAuxData->format('y/m/d'));
-		$owner->setNascimento('2012-05-17');
-		//$owner->setNascimento("2012-17-07");
-		$owner->setSexo("F");
-		$owner->setEmail("isadorasilva@gmail.com");
-*/
-		$animal->setCodigo(5);
-		$animal->setCodigoDono(4);
-		$animal->setNome("Alanis");
-		$animal->setEspecie("Cão");
-		$animal->setSexo("F");
-		$objAuxData = new DateTime('2012-09-04');
-		$animal->setNascimento($objAuxData->format('y/m/d'));
+	
+
+	$status->setCodigo(3);
+	$status->setConteudo("Gnt! Isso é necessário!");
+
+	$this->assertEquals(
+		"alteracao ok",
+		$statusDao->atualizar($status,ModelStatus::EDITANDO_STATUS)
+	);
+	
 
 
-		//$status->getCodigoAnimal(3);
-		//$status->setConteudo("Olha! Muito obrigado viu");
-
-		
-		//um usuario nao cadastrado tenta colocar um email ja existente
-		//$this->assertEquals(true,$teste->existe("email","c@c.com.br",DonoConBD::PARA_CADASTRO));
-
-		/*$this->assertEquals(false, $teste->existe("email","teste1909@gmail.com",ModelDono::NOVO_CADASTRO));
-		$this->assertEquals(true, $teste->existe("email","bia@gmail.com",ModelDono::NOVO_CADASTRO));
-		$this->assertEquals(true, $teste->existe("usuario","bia",ModelDono::NOVO_CADASTRO));
-		$this->assertEquals(false, $teste->existe("usuario","bia@gmail.com",ModelDono::NOVO_CADASTRO));
-		$this->assertEquals(true, $teste->existe("codigo","2",ModelDono::NOVO_CADASTRO));
-		$this->assertEquals(false, $teste->existe("codigo","1000",ModelDono::NOVO_CADASTRO));
-*/
-
-		/*$this->assertEquals(0, $teste->verifica($owner,ModelDono::PARA_CADASTRAR));
-
-		$owner->setEmail("bia@gmail.com");
-		$owner->setUsuario("4");
-		$this->assertEquals("O EMAIL EXISTE", $teste->verifica($owner,ModelDono::PARA_CADASTRAR));
-
-
-		$owner->setEmail("bianovinha@gmail.com");
-		$owner->setUsuario("bia");
-		$this->assertEquals("O USUARIO EXISTE", $teste->verifica($owner,ModelDono::PARA_CADASTRAR));
-
-*/
-
-		//$this->assertEquals("alteracao de dados efeituada", $donoDao->atualizar($owner,ModelDono::ALTERACAO_DADOS));
-		
-		//$this->assertEquals("alteracao de dados efeituada", $animalDao->atualizacao($animal,$owner->getCodigo(),ModelDono::ALTERACAO_DADOS));
-
-		//$this->assertEquals("",$statusDao->exibirTodosStatus(4));
-		//$this->assertEquals("alteracao de dados efeituada", $donoDao->gerausuario());
-		
-		//$this->assertEquals("...", $donoDao->excluir("0; Drop Table animal;"));
-		//$this->assertEquals("atualizacao feita", $teste->excluir(1500));
-
-
-//		$this->assertEquals(true, $teste->verifica("email","bia@gmail.com",5));
-//
-//		$this->assertEquals(false, $teste->verifica("usuario","z",6));
-//		$this->assertEquals(true, $teste->verifica("usuario","bia",5));
-
-
-		$this->assertEquals(
-			"alteracao ok",
-			$animalDao->atualizacao($animal,ModelAnimal::ALTERACAO_DADOS)
-		);
+	/*	$this->assertEquals(
+			"D",
+			$donoDao->excluir(4)
+		);*/
 
 		/*$this->assertEquals(
-			"alteracao de dados efeituada",
-			$statusDao->cadastrar($status,4)
+			"Animal excluido",
+			$animalDao->excluir(2)
+		);
+
+		$owner2->setCodigo(14);
+		$owner2->setUsuario("incognito");
+		$owner2->setSenha("password27");
+		$owner2->setNome("firstName27");
+		$owner2->setSobrenome("php");
+		$owner2->setNascimento("2016-05-24");
+		$owner2->setSexo("M");
+		$owner2->setEmail("email271@email271.com");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
+		);
+
+
+	/*	$owner2->setCodigo(4);
+		$owner2->setUsuario("henri2");
+		$owner2->setSenha("henrisenha");
+		$owner2->setNome("henrique2");
+		$owner2->setSobrenome("dourado2");
+		$owner2->setNascimento("2017-07-17");
+		$owner2->setSexo("M");
+		$owner2->setEmail("novo_henriquedourado2@hotmal.com");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
+		);
+*/
+	/*	$animal->setCodigo(3);
+		$animal->setCodigoDono(16);
+		$animal->setNome("Bustica");
+		$animal->setEspecie("Esquilo");
+		$animal->setNascimento("2015-12-07");
+		$animal->setSexo("M");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$animalDao->atualizar($animal,ModelAnimal::ALTERACAO_DADOS)
+		);
+
+	
+
+
+
+
+	/*	$owner2->setCodigo(20);
+		$owner2->setUsuario("user20");
+		$owner2->setSenha("iurysantos");
+		$owner2->setNome("Iury");
+		$owner2->setSobrenome("Santos");
+		$owner2->setNascimento("2013-06-18");
+		$owner2->setSexo("M");
+		$owner2->setEmail("iurysantos@gmail.com");
+
+		$this->assertEquals(
+			"Alteracao de dados OK!",
+			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
+		);
+*/
+/*
+		$animal2->setCodigoDono(4);
+		$animal2->setNome("Alf");
+		$animal2->setEspecie("Elefante");
+		$animal2->setSexo("M");
+		$animal2->setNascimento("2015-12-25");
+
+		$this->assertEquals(
+			"Cadastro de animal ok",
+			$animalDao->atualizar($animal2,ModelDono::NOVO_CADASTRO)
+		);
+*/
+
+		
+		
+
+
+		/*$owner->setNome("Daniel");
+		$owner->setSobrenome("Lacerda");
+		$owner->setNascimento("1994-10-20");
+		$owner->setEmail("DaviLacerda@gmail.com");
+		$owner->setSenha("davilacerda");
+		$owner->setSexo("M");
+
+		$this->assertEquals(
+			"Cadastro de usuario OK!",
+			$donoDao->atualizar($owner,ModelDono::NOVO_CADASTRO)
 		);*/
-		
-
-		
-		
-
-	}
 
 
 	
+
+
+		
+
+
+
+
+
+
+		
+
+	}
 
 }
 

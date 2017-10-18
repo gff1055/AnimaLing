@@ -71,7 +71,7 @@ class ModelDono{
 	//private function existe($campo, $dado, $tipo){
 
 	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
-	private function existe($campo,$dado,$codOcorrencia){
+	public function existe($campo,$dado,$codOcorrencia){
 
 		$query = "select * from dono where $campo=?";
 		try{
@@ -173,7 +173,7 @@ class ModelDono{
 
 					//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 					$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-					$feedback = "Cadastro";
+					$feedback = "Cadastro de usuario";
 				}
 
 				//se nao houver erro e a operacao for uma atualizacao
@@ -182,7 +182,7 @@ class ModelDono{
 					//carrega a query de atualizacao
 					$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
 					$result->bindValue(8,$dono->getCodigo());
-					$feedback = "Atualizacao";
+					$feedback = "Alteracao de dados";
 				}
 
 				// VALORES A SEREM PASSADOS PARA A QUERY
@@ -197,7 +197,7 @@ class ModelDono{
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
 
-				$feedback = $feedback." ok!";
+				$feedback = $feedback." ok";
 			}
 
 		}catch(PDOException $erro){
@@ -216,7 +216,7 @@ class ModelDono{
 		if($this->existe("codigo", $codigo, ModelDono::EXCLUSAO)){
 
 			try{
-				$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo = ?");
+				$resultado=$this->conex->getConnection()->prepare("delete from dono where codigo=?");
 				$resultado->bindValue(1,$codigo);
 				$resultado->execute();
 				$excluido = true;

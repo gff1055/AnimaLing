@@ -8,8 +8,8 @@ class ModelStatus
 	private $conex;
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
-	const NOVO_CADASTRO = -1;
-	const ALTERACAO_DADOS = -2;
+	const NOVO_STATUS = -1;
+	const EDITANDO_STATUS = -2;
 	const EXCLUSAO = -3;
 	
 	
@@ -32,6 +32,7 @@ class ModelStatus
 
 			$todosStatus=array();
 
+			//verifica se foi encontrado algum status associado ao animal
 			if($resultado->rowCount()>0 ){
 				while($linha=$resultado->fetch(PDO::FETCH_OBJ)){
 					array_push($todosStatus,$linha);
@@ -39,15 +40,15 @@ class ModelStatus
 			}
 			else
 				$todosStatus="Nada a exibir";
-			}catch(PDOException $e){
-				$todoStatus =  "ERRO: ".$erro->getmessage();
-			}
+		}catch(PDOException $e){
+			$todoStatus =  "ERRO: ".$erro->getmessage();
+		}
 
-			return $todosStatus;
+		return $todosStatus;
 
 	}
 
-	public function cadastrar($pStatus,$pCodigoAnimal){
+	public function cadastrar($pStatus){
 
 		$feedback = null;
 
@@ -57,11 +58,11 @@ class ModelStatus
 
 			$pStatus->setDataStatus();
 
-			$resultado->bindValue(1,$pCodigoAnimal);
+			$resultado->bindValue(1,$pStatus->getCodigoAnimal());
 			$resultado->bindValue(2,$pStatus->getConteudo());
 			$resultado->bindValue(3,$pStatus->getDataStatus());
 			$resultado->execute();
-			$feedback = "cadastro ok";
+			$feedback = "Envio de mensagem ok";
 
 		}catch(PDOException $erro){
 			$feedback = "erro:".$erro->getMessage();
@@ -71,7 +72,7 @@ class ModelStatus
 	
 	}
 	
-	public function atualizar()
+	public function alteracao($pStatus)
 	{
 		$feedback = null;
 
@@ -79,18 +80,63 @@ class ModelStatus
 
 			$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
 
-			$resultado->bindValue(1,$pCodigoAnimal);
-			$resultado->bindValue(2,$pStatus->getConteudo());
-			$resultado->bindValue(3,$pStatus->getDataStatus());
+			$resultado->bindValue(1,$pStatus->getConteudo());
+			$resultado->bindValue(2,$pStatus->getCodigo());
 			$resultado->execute();
-			$feedback = "cadastro ok";
+			$feedback = "Alteracao ok";
 
 		}catch(PDOException $erro){
-			$feedback = "erro:".$erro->getMessage();
+			$feedback = "Erro:".$erro->getMessage();
 		}
 
 		return $feedback;
 	}
+
+	public function atualizar($pStatus,$pTipoRotina){
+		
+		$feedback = null;
+
+		try{
+
+			//em caso de adicao de um novo status
+			if($pTipoRotina == ModelStatus::NOVO_STATUS){
+
+				//preparacao da query de insercao
+				$resultado=$this->conex->getconnection()->prepare("insert into status(codigoAnimal, conteudo, dataStatus) values (?,?,?)");
+
+				//gerando a hora que o Status foi digitado
+				$pStatus->setDataStatus();
+				$resultado->bindValue(3,$pStatus->getStatus());
+
+				$feedback = "novo status";
+			}
+
+			//no caso da edicao de um status existente
+			elseif($pTipoRotina == ModelStatus::EDITANDO_STATUS){
+
+				//preparacao da query de atualizacao
+				$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
+
+				$feedback="alteracao";
+			}
+
+			else $feedback = "erro desconhecido";
+
+			$resultado->bindValue(1,$pStatus->getConteudo());
+			$resultado->bindValue(2,$pStatus->getCodigo());
+			$resultado->execute();
+			$feedback = $feedback." ok";
+
+
+
+		}catch(PDOException $erro){
+			$feedback = "Erro:".$erro->getMessage();
+			return "erro";
+		}
+
+		return $feedback;
+	}
+
 	
 	public function excluir()
 	{

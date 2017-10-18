@@ -6,6 +6,10 @@ class Status{
 	private $conteudo;
 	private $dataStatus;
 	
+
+	const NOVO_STATUS = -1;
+	const EDITADO = -2;
+
 	function Animal()
 	{
 		
@@ -41,9 +45,10 @@ class Status{
 	}
 	
 	public function setDataStatus(){
+
 		date_default_timezone_set("America/Sao_Paulo");
 		$this->dataStatus = date('Y-m-d H:i');
-
+		
 	}
 }
 ?>

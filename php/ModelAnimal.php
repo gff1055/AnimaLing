@@ -26,44 +26,94 @@ class ModelAnimal
 	{
 		return $this->conexao;
 	}
-	
-	
 
 
-	public function atualizacao($pAnimal,$operacao)
-	{
-		$result = null;
-		$feedback = null;
-		if($operacao == ModelAnimal::NOVO_CADASTRO){
-			$result = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
-			$feedback = "cadastro";
-		}
-		elseif($operacao == ModelAnimal::ALTERACAO_DADOS){
-			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-			$result=$this->conex->getConnection()->prepare("update animal set codigoDono=?, nome=?,especie=?,nascimento=?,sexo=? where codigo=?");
-			$result->bindValue(6,$pAnimal->getCodigo());
-			$feedback = "alteracao";
+	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
+	public function existeAnimal($pAnimal,$codOcorrencia){
 
-		}
+		$query = "select * from animal where nome=? and codigoDono=?";
 		try{
 
-			// VALORES A SEREM PASSADOS PARA A QUERY
-			$result->bindValue(1,$pAnimal->getCodigoDono());
-			$result->bindValue(2,$pAnimal->getNome());
-			$result->bindValue(3,$pAnimal->getEspecie());
-			$result->bindValue(4,$pAnimal->getNascimento());
-			$result->bindValue(5,$pAnimal->getSexo());
 			
-			
-			//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
-			$result->execute();
+			if($codOcorrencia == ModelAnimal::NOVO_CADASTRO){
+				$result=$this->conex->getConnection()->prepare($query);
+			}
 
+			else{
+				$query = $query." and codigo<>?";
+				$result=$this->conex->getConnection()->prepare($query);
+				$result->bindValue(3,$pAnimal->getCodigo());
+			}
+
+			//EFETUANDO BIND DE VALORES NA QUERY
+			$result->bindValue(1,$pAnimal->getNome());
+			$result->bindValue(2,$pAnimal->getCodigoDono());
+						
+
+			//EXECUCAO DA QUERY COM OS VALORES
+			$result->execute();
 		}catch(PDOException $erro){
-			echo "erro: ".$erro->getMessage();
-			$feedback = "erro interno na aplicacao";
+			echo "ERRO: ".$erro->getmessage();
 		}
 
-		return $feedback." ok";
+
+		
+		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
+		if($result->rowCount()>0){
+			return true;
+		}
+		
+		//RETORNA SE O USUARIO NAO EXISTE		
+		else{
+			return false;
+		}
+	}
+
+
+	public function atualizar($pAnimal,$operacao)
+	{
+		$result = null;
+
+		$feedback = null;
+
+		if($this->existeAnimal($pAnimal,$operacao)){
+			$feedback = "Ja existe um animal com esse nome";
+		}
+		else{
+			if($operacao == ModelAnimal::NOVO_CADASTRO){
+				$result = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
+				$feedback = "Cadastro de animal";
+			}
+			elseif($operacao == ModelAnimal::ALTERACAO_DADOS){
+				//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+				$result=$this->conex->getConnection()->prepare("update animal set codigoDono=?, nome=?,especie=?,nascimento=?,sexo=? where codigo=?");
+				$result->bindValue(6,$pAnimal->getCodigo());
+				$feedback = "Alteracao de dados";
+			}
+			try{
+
+				// VALORES A SEREM PASSADOS PARA A QUERY
+				$result->bindValue(1,$pAnimal->getCodigoDono());
+				$result->bindValue(2,$pAnimal->getNome());
+				$result->bindValue(3,$pAnimal->getEspecie());
+				$result->bindValue(4,$pAnimal->getNascimento());
+				$result->bindValue(5,$pAnimal->getSexo());
+			
+			
+				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+				$result->execute();
+
+				//operacao de insercao/atualizacao foi executada
+				$feedback = $feedback." ok";
+
+			}catch(PDOException $erro){
+				echo "erro: ".$erro->getMessage();
+				$feedback = "erro interno na aplicacao";
+			}
+		}
+
+		// retornando o resultado da atualizacao
+		return $feedback;
 	}
 
 	
@@ -81,7 +131,7 @@ class ModelAnimal
 		}
 	
 		if($excluido){
-			return "usuario excluido";
+			return "Animal excluido";
 		}
 	}
 	
