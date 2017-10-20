@@ -117,13 +117,13 @@ class ModelAnimal
 	}
 
 	
-	public function excluir($codigo)
+	public function excluir($pAnimal)
 	{
 		$excluido = false;
 		
 		try{
 			$resultado=$this->conex->getConnection()->prepare("delete from animal where codigo = ?");
-			$resultado->bindValue(1,$codigo);
+			$resultado->bindValue(1,$pAnimal->getCodigo());
 			$resultado->execute();
 			$excluido = true;
 		}catch(PDOException $erro){

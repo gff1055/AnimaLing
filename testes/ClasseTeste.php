@@ -20,18 +20,115 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		$animal2 = new Animal();
 		
 		$statusDao = new ModelStatus();
+		
 		$status = new Status();
+		$status2 = new Status();
 		
 
-	
+		//editar status 2
+		//excluir status 3
+		//cadastrar novo dono
+		//atualizar dono 20 (Usuario, sobrenome, nascimento)
+		//atualizar animal 5 (nome, especie, nascimento)
+		//excluir animal 6 
 
-	$status->setCodigo(3);
-	$status->setConteudo("Gnt! Isso é necessário!");
+
+
+		$status->setCodigo(2);
+
+		$status->setConteudo("Se seu problema é dinheiro, e voce não tem dinheiro. Logo voce não tem problema");
+
+
+		$this->assertEquals(
+			"alteracao ok",
+			$statusDao->atualizar($status,ModelStatus::EDITANDO_STATUS)
+		);
+
+
+
+		$status2->setCodigo(3);
+		
+		$this->assertEquals(
+			"O status foi excluido",
+			$statusDao->excluir($status2)
+		);
+
+
+
+		/*$owner->setNome("Beatriz");
+		$owner->setSobrenome("Castro");
+		$owner->setNascimento("2010-10-5");
+		$owner->setSexo("F");
+		$owner->setEmail("beatrizcastro@gmail.com");
+		$owner->setSenha("beatrizcastro");
+
+		$this->assertEquals(
+			"Cadastro de usuario ok",
+			$donoDao->atualizar($owner,ModelDono::NOVO_CADASTRO)
+		);*/
+
+
+
+		$owner2->setCodigo(20);
+		$owner2->setUsuario("user20");
+		$owner2->setSenha("iurysapori");
+		$owner2->setNome("Iury");
+		$owner2->setSobrenome("Sapori");
+		$owner2->setNascimento("2012-04-15");
+		$owner2->setSexo("M");
+		$owner2->setEmail("iurysantos@gmail.com");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
+		);
+
+
+
+		$animal->setCodigo(5);
+		$animal->setCodigoDono(4);
+		$animal->setNome("Arizona");
+		$animal->setEspecie("Cão");
+		$animal->setNascimento("2004-12-09");
+		$animal->setSexo("F");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$animalDao->atualizar($animal,ModelAnimal::ALTERACAO_DADOS)
+		);
+
+
+
+		$animal2->setCodigo(6);
+
+		$this->assertEquals(
+			"Animal excluido",
+			$animalDao->excluir($animal2)
+		);
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+
+
+	$status2->setCodigoAnimal(9);
+	$status2->setConteudo("Esse é um comnetario Nove");
 
 	$this->assertEquals(
-		"alteracao ok",
-		$statusDao->atualizar($status,ModelStatus::EDITANDO_STATUS)
-	);
+		"novo status ok",
+		$statusDao->atualizar($status2,ModelStatus::NOVO_STATUS)
+	);*/
+
+
 	
 
 
@@ -40,12 +137,8 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 			$donoDao->excluir(4)
 		);*/
 
-		/*$this->assertEquals(
-			"Animal excluido",
-			$animalDao->excluir(2)
-		);
-
-		$owner2->setCodigo(14);
+		
+		/*$owner2->setCodigo(14);
 		$owner2->setUsuario("incognito");
 		$owner2->setSenha("password27");
 		$owner2->setNome("firstName27");
@@ -74,37 +167,12 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
 		);
 */
-	/*	$animal->setCodigo(3);
-		$animal->setCodigoDono(16);
-		$animal->setNome("Bustica");
-		$animal->setEspecie("Esquilo");
-		$animal->setNascimento("2015-12-07");
-		$animal->setSexo("M");
-
-		$this->assertEquals(
-			"Alteracao de dados ok",
-			$animalDao->atualizar($animal,ModelAnimal::ALTERACAO_DADOS)
-		);
-
+	
 	
 
 
 
 
-	/*	$owner2->setCodigo(20);
-		$owner2->setUsuario("user20");
-		$owner2->setSenha("iurysantos");
-		$owner2->setNome("Iury");
-		$owner2->setSobrenome("Santos");
-		$owner2->setNascimento("2013-06-18");
-		$owner2->setSexo("M");
-		$owner2->setEmail("iurysantos@gmail.com");
-
-		$this->assertEquals(
-			"Alteracao de dados OK!",
-			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
-		);
-*/
 /*
 		$animal2->setCodigoDono(4);
 		$animal2->setNome("Alf");
