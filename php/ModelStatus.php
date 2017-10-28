@@ -48,8 +48,8 @@ class ModelStatus
 
 	}
 
-		public function atualizar($pStatus,$pTipoRotina){
-		
+	public function atualizar($pStatus,$pTipoRotina){
+	
 		$feedback = null;
 
 		try{
@@ -59,9 +59,6 @@ class ModelStatus
 
 				//preparacao da query de insercao
 				$resultado=$this->conex->getconnection()->prepare("insert into status(conteudo, codigoAnimal, dataStatus) values (?,?,?)");
-
-				//gerando a hora que o Status foi digitado
-				$pStatus->setDataStatus();
 
 				//fazendo o binding do codigo e da data de status
 				$resultado->bindValue(2,$pStatus->getCodigoAnimal());

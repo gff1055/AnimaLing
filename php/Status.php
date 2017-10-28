@@ -44,11 +44,19 @@ class Status{
 		return $this->dataStatus;
 	}
 	
-	public function setDataStatus(){
+	public function setDataStatus($param){
 
-		date_default_timezone_set("America/Sao_Paulo");
-		$this->dataStatus = date('Y-m-d H:i');
+		if($param = Status::NOVO_STATUS){
 		
+			date_default_timezone_set("America/Sao_Paulo");
+			$this->dataStatus =  date('Y-m-d H:i');
+		
+		}
+		
+		else{
+			$this->dataStatus = $pDataStatus;
+		}
 	}
+
 }
 ?>

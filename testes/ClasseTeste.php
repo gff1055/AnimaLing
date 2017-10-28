@@ -25,16 +25,54 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		$status2 = new Status();
 		
 
-		//editar status 2
-		//excluir status 3
-		//cadastrar novo dono
-		//atualizar dono 20 (Usuario, sobrenome, nascimento)
-		//atualizar animal 5 (nome, especie, nascimento)
-		//excluir animal 6 
+		//atualizar dono 6 (senha, sobrenome, sexo)
+		//atualizar animal 2 (especie,nsacimento,sexo)
+		//editar status 7
+/*
+
+		$owner2->setCodigo(6);
+		$owner2->setUsuario("bia");
+		$owner2->setSenha("biamaria");
+		$owner2->setNome("Maria");
+		$owner2->setSobrenome("Bia");
+		$owner2->setNascimento("2017-06-13");
+		$owner2->setSexo("F");
+		$owner2->setEmail("bia@gmail.com");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
+		);
 
 
 
-		$status->setCodigo(2);
+		$animal->setCodigo(3);
+		$animal->setCodigoDono(16);
+		$animal->setNome("Bustica");
+		$animal->setEspecie("Hamster");
+		$animal->setNascimento("2014-10-04");
+		$animal->setSexo("F");
+
+		$this->assertEquals(
+			"Alteracao de dados ok",
+			$animalDao->atualizar($animal,ModelAnimal::ALTERACAO_DADOS)
+		);
+
+*/
+
+		$status->setCodigoAnimal(3);
+		$status->setDataStatus(Status::NOVO_STATUS);
+		$status->setConteudo("DE NOVO VELHO??? TO FALANDO... NÃO ESTOU NÃO!!!!");
+
+
+		$this->assertEquals(
+			"alteracao ok",
+			$statusDao->atualizar($status,ModelStatus::NOVO_STATUS)
+		);
+
+
+
+		/*$status->setCodigo(2);
 
 		$status->setConteudo("Se seu problema é dinheiro, e voce não tem dinheiro. Logo voce não tem problema");
 
@@ -51,7 +89,7 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 		$this->assertEquals(
 			"O status foi excluido",
 			$statusDao->excluir($status2)
-		);
+		);*/
 
 
 
@@ -69,42 +107,20 @@ class ClasseTeste extends PHPUnit_Framework_TestCase{
 
 
 
-		$owner2->setCodigo(20);
-		$owner2->setUsuario("user20");
-		$owner2->setSenha("iurysapori");
-		$owner2->setNome("Iury");
-		$owner2->setSobrenome("Sapori");
-		$owner2->setNascimento("2012-04-15");
-		$owner2->setSexo("M");
-		$owner2->setEmail("iurysantos@gmail.com");
-
-		$this->assertEquals(
-			"Alteracao de dados ok",
-			$donoDao->atualizar($owner2,ModelDono::ALTERACAO_DADOS)
-		);
+		
 
 
 
-		$animal->setCodigo(5);
-		$animal->setCodigoDono(4);
-		$animal->setNome("Arizona");
-		$animal->setEspecie("Cão");
-		$animal->setNascimento("2004-12-09");
-		$animal->setSexo("F");
-
-		$this->assertEquals(
-			"Alteracao de dados ok",
-			$animalDao->atualizar($animal,ModelAnimal::ALTERACAO_DADOS)
-		);
+		
 
 
 
-		$animal2->setCodigo(6);
+		/*$animal2->setCodigo(6);
 
 		$this->assertEquals(
 			"Animal excluido",
 			$animalDao->excluir($animal2)
-		);
+		);*/
 
 
 

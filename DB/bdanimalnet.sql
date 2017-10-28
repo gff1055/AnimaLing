@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 02-Out-2017 às 23:43
+-- Generation Time: 28-Out-2017 às 16:25
 -- Versão do servidor: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -25,6 +25,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `amizade`
+--
+
+CREATE TABLE `amizade` (
+  `codigo` int(10) NOT NULL,
+  `codAnimal` int(10) NOT NULL,
+  `codAmigo` int(10) NOT NULL,
+  `dataSolicitacao` date NOT NULL,
+  `dataConfirmacao` date NOT NULL,
+  `situacao` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `animal`
 --
 
@@ -42,8 +57,12 @@ CREATE TABLE `animal` (
 --
 
 INSERT INTO `animal` (`codigo`, `codigoDono`, `nome`, `especie`, `sexo`, `nascimento`) VALUES
-(1, 8, 'Fido', 'Gato', 'M', '2016-01-08'),
-(3, 16, 'Bustica', 'Rato', 'M', '2015-12-07');
+(1, 8, 'Fido', 'Cão', 'F', '2015-11-15'),
+(3, 16, 'Bustica', 'Hamster', 'F', '2014-10-04'),
+(4, 10, 'Adam', 'Gato', 'M', '2013-10-05'),
+(5, 4, 'Arizona', 'Cão', 'F', '2004-12-09'),
+(7, 14, 'Alerta', 'Coelho', 'F', '2017-02-28'),
+(9, 4, 'Alf', 'Elefante', 'M', '2015-12-25');
 
 -- --------------------------------------------------------
 
@@ -69,20 +88,21 @@ CREATE TABLE `dono` (
 INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimento`, `sexo`, `email`) VALUES
 (2, 'b', 'b', 'b', 'b', '2017-05-02', NULL, 'b@b.com'),
 (3, 'c', 'c', 'c', 'c', '2017-05-03', NULL, 'c@c.com.br'),
-(4, 'henri2', 'henrisenha', 'henrique2', 'dourado2', '2017-07-17', 'M', 'henriquedourado2@hotmal.com'),
-(6, 'bia', 'bia', 'Maria', 'beatriz', '2017-06-13', NULL, 'bia@gmail.com'),
+(4, 'henri2', 'henrisenha', 'henrique2', 'dourado2', '2017-07-17', 'M', 'novo_henriquedourado2@hotmal.com'),
+(6, 'bia', 'biamaria', 'Maria', 'Bia', '2017-06-13', 'F', 'bia@gmail.com'),
 (7, 'Cambia', 'camilabeatriz', 'Camila', 'Beatriz', '2017-09-21', 'F', 'camilabeatriz@gmail.com'),
 (8, 'Brube', 'brunobernardo', 'Bruno', 'Bernardo', '2016-09-21', 'M', 'brunobernardo@gmail.com'),
-(10, 'davied', 'davieduardo', 'Davi', 'Eduardo', '2014-07-19', 'M', 'davieduardo@gmail.com'),
-(12, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
-(13, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
-(14, 'user271', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email271@email271.com'),
+(10, 'daieliza', 'daianeeliza', 'Daiane', 'Eliza', '2013-05-16', 'F', 'daianeeliza@gmail.com'),
+(14, 'incognito', 'password27', 'firstName27', 'php', '2016-05-24', 'M', 'email271@email271.com'),
 (15, 'user03', 'password27', 'firstName27', 'lastName27', '2017-07-27', 'M', 'email03@email.com'),
 (16, 'MigMath', 'miguelmatheus', 'Miguel', 'Matheus', '2017-09-20', 'M', 'miguelmatheus@gmail.com'),
 (17, 'Julisa', 'juliaisabela', 'Julia', 'Isabela', '2015-08-20', 'F', 'juliaisabela@gmail.com'),
 (18, 'user10', 'lauralarissa', 'Laura', 'Larissa', '2014-07-19', 'f', 'lauralarissa@gmail.com'),
 (19, 'henro', 'henriquerodrigo', 'Henrique', 'Rodrigo', '2013-06-18', 'M', 'henriquerodrigo@gmail.com'),
-(20, 'user20', 'hugorafael', 'Hugo', 'Rafael', '2013-06-18', 'M', 'hugorafael@gmail.com');
+(20, 'user20', 'iurysapori', 'Iury', 'Sapori', '2012-04-15', 'M', 'iurysantos@gmail.com'),
+(21, 'user21', 'isadorasilva', 'Isadora', 'Silva', '2012-05-17', 'F', 'isadorasilva@gmail.com'),
+(22, 'user22', 'daniellacerda', 'Daniel', 'Lacerda', '1994-10-20', 'M', 'DaviLacerda@gmail.com'),
+(23, 'user23', 'beatrizcastro', 'Beatriz', 'Castro', '2010-10-05', 'F', 'beatrizcastro@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -91,14 +111,34 @@ INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimen
 --
 
 CREATE TABLE `status` (
+  `codigo` int(11) NOT NULL,
   `codigoAnimal` int(11) DEFAULT NULL,
-  `conteudo` varchar(255) DEFAULT NULL,
-  `dataStatus` date DEFAULT NULL
+  `conteudo` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `dataStatus` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `status`
+--
+
+INSERT INTO `status` (`codigo`, `codigoAnimal`, `conteudo`, `dataStatus`) VALUES
+(1, 4, 'Ola! eu sou o Adam. Esta é a minha primeira postagem', '2017-10-05'),
+(5, 1, 'Homem deve ser tratado como um bom vinho: no escuro, na horizontal, e com rolha na boca. BRINKS', '2017-10-13'),
+(7, 9, 'Se seu problema é dinheiro, e voce não tem dinheiro. Logo voce não tem problema', '2017-10-19'),
+(8, 3, 'TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-27'),
+(9, 3, 'DE NOVO VELHO??? TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-28');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `amizade`
+--
+ALTER TABLE `amizade`
+  ADD PRIMARY KEY (`codigo`),
+  ADD UNIQUE KEY `codAmigo_fk` (`codAmigo`),
+  ADD KEY `codAnimal_fk` (`codAnimal`);
 
 --
 -- Indexes for table `animal`
@@ -117,6 +157,7 @@ ALTER TABLE `dono`
 -- Indexes for table `status`
 --
 ALTER TABLE `status`
+  ADD PRIMARY KEY (`codigo`),
   ADD KEY `codigoAnimal_fk` (`codigoAnimal`) USING BTREE;
 
 --
@@ -124,18 +165,35 @@ ALTER TABLE `status`
 --
 
 --
+-- AUTO_INCREMENT for table `amizade`
+--
+ALTER TABLE `amizade`
+  MODIFY `codigo` int(10) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `animal`
 --
 ALTER TABLE `animal`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `dono`
 --
 ALTER TABLE `dono`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+--
+-- AUTO_INCREMENT for table `status`
+--
+ALTER TABLE `status`
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Limitadores para a tabela `amizade`
+--
+ALTER TABLE `amizade`
+  ADD CONSTRAINT `codAmigo_fk` FOREIGN KEY (`codAmigo`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `codAnimal_fk` FOREIGN KEY (`codAnimal`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `animal`
