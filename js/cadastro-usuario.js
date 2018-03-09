@@ -1,3 +1,0 @@
-$(function(){
-	$("#birthday").datepicker();
-});
