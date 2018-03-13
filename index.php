@@ -21,6 +21,8 @@ donoDao = new DonoConBD();
 		<a href="php/testeexcluir.php">testeaexcluir</a>
 		<br>
 		<a href="php/testeBuscaAnimais.php">teste busca de animais</a>
+		<br>
+		<a href="php/testeBuscaStatus.php">teste busca de status</a>
 
 	</body>
 <html>
