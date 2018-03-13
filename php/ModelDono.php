@@ -1,7 +1,7 @@
 <?php
 
-require_once("conexao.php");
-require_once("dono.php");
+require_once("Conexao.php");
+require_once("Dono.php");
 
 class ModelDono{
 	// variavel para conexao com o banco de dados
@@ -12,6 +12,7 @@ class ModelDono{
 	const NOVO_CADASTRO = -1;
 	const ALTERACAO_DADOS = -2;
 	const EXCLUSAO = -3;
+	const NO_RESULTS = 0;
 	
 	//construtor da classe
 	function __construct(){

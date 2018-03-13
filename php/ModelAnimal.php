@@ -11,6 +11,7 @@ class ModelAnimal
 	const NOVO_CADASTRO = -1;
 	const ALTERACAO_DADOS = -2;
 	const EXCLUSAO = -3;
+	const NO_RESULTS = 0;
 	
 	function __construct()
 	{
@@ -136,9 +137,40 @@ class ModelAnimal
 	}
 	
 	
-	public function busca()
+	public function busca($termo)
 	{
 		
+		$resultado=$this->conex->getConnection()->prepare("
+			select a.nome as nomeAnimal, especie, d.nome as nomeDono
+			from animal as a
+			inner join dono as d
+			on d.codigo = a.codigoDono and a.nome like ?");
+		//preparando a query do banco de dados
+
+		$resultado->bindValue(1,"%".$termo."%");
+		//FAZENDO O BIND DOS INDICES NA QUERY COM OS VALORES
+		//RESULTADO->bindValue(INDICE, VALOR)
+		
+		//EXECUTANDO A QUERY
+		$resultado->execute();
+
+		//resgatando o resultado da consulta linha a linha(fetch)
+		//cada linha é tratada como um objeto
+		$arr = array();
+		if($resultado->rowCount() > 0){
+			while($linha=$resultado->fetch(PDO::FETCH_ASSOC)){
+
+				//ADICIONANDO O REGISTRO NO ARRAY DE OBJETOS
+				array_push($arr,$linha);
+			}			
+		}
+		
+		else{
+			
+			$arr = self::NO_RESULTS;
+		}
+		
+		return $arr;
 	}
 }
 ?>
