@@ -2,14 +2,14 @@
 require_once("ModelStatus.php");
 
 $statEncontr = new ModelStatus();
-$statEncontr->busca("a");
+$resultado = $statEncontr->busca("");
 
-if($statEncontr == ModelStatus::NO_RESULTS){
+if($resultado == ModelStatus::NO_RESULTS){
 		echo "sem ocorrencia";
 }
 else{
-	foreach($statEncontr as $status){
-		echo 
+	foreach($resultado as $status){
+		echo "<b>".$status["nomeAnimal"]." :</b> ".$status["acontAgora"]."<br>";
 	}
 }
 

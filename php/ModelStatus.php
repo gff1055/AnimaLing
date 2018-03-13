@@ -1,7 +1,7 @@
 <?php
 
 require_once("Status.php");
-require_once("conexao.php");
+require_once("Conexao.php");
 
 class ModelStatus
 {
@@ -126,13 +126,15 @@ class ModelStatus
 	public function busca($termo)
 	{
 		$resultado=$this->conex->getConnection()->prepare("
-			select a.nome as nomeAnimal, s.conteudo as status
+			select a.nome as nomeAnimal, s.conteudo as acontAgora
 			from animal as a
 			inner join status as s
-			on a.codigo = s.codigoAnimal");
+			on a.codigo = s.codigoAnimal and a.nome like ? or s.conteudo like ?
+			group by s.conteudo");
 		//preparando a query do banco de dados
 
 		$resultado->bindValue(1,"%".$termo."%");
+		$resultado->bindValue(2,"%".$termo."%");
 		//FAZENDO O BIND DOS INDICES NA QUERY COM OS VALORES
 		//RESULTADO->bindValue(INDICE, VALOR)
 		
