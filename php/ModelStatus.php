@@ -126,11 +126,16 @@ class ModelStatus
 	public function busca($termo)
 	{
 		$resultado=$this->conex->getConnection()->prepare("
-			select a.nome as nomeAnimal, s.conteudo as acontAgora
-			from animal as a
-			inner join status as s
-			on a.codigo = s.codigoAnimal and a.nome like ? or s.conteudo like ?
-			group by s.conteudo");
+				select
+					a.nome as nomeAnimal, s.conteudo as acontAgora
+				from
+					animal as a
+				inner join
+					status as s
+				on
+					a.codigo = s.codigoAnimal
+				where
+					a.nome like ? or s.conteudo like ?");
 		//preparando a query do banco de dados
 
 		$resultado->bindValue(1,"%".$termo."%");

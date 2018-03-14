@@ -2,7 +2,7 @@
 require_once("ModelStatus.php");
 
 $statEncontr = new ModelStatus();
-$resultado = $statEncontr->busca("");
+$resultado = $statEncontr->busca(" ");
 
 if($resultado == ModelStatus::NO_RESULTS){
 		echo "sem ocorrencia";
