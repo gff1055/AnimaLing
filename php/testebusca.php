@@ -1,9 +1,9 @@
 <?php
-require_once("donoConBD.php");
-require_once("dono.php");
+require_once("ModelDono.php");
+require_once("Dono.php");
 
 //CRIACAO DE INSTANCIA DA CLASSE DonoConBD(Classe DAO)
-$donoDao=new DonoConBD();
+$donoDao=new ModelDono();
 ?>
 
 <html>
@@ -22,35 +22,55 @@ $donoDao=new DonoConBD();
 		if(!empty($_GET)){
 				
 			//FAZENDO BUSCA POR USUARIO
-			$resultado=$donoDao->buscaUsuario($_GET["nome"]);
+			$resultado=$donoDao->buscarUsuario($_GET["nome"]);
 			
 			//VERIFICANDO SE HOUVE RETORNO DE RESULTADOS
 			switch($resultado){
 							
 				//VERIFICACAO NO CASO DE NAO HAVER OCORRENCIAS
-				case DonoConBD::NO_RESULTS:
+				case ModelDono::NO_RESULTS:
 					echo "<br> USUARIO NAO ENCONTRADO";
 					break;
 					
 				//VERIFICACAO NO CASO DE PESQUISA EM "BRANCO"
-				case DonoConBD::BLANK:
+				case ModelDono::BLANK:
 					echo "<br> NADA A EXIBIR";
 					break;
 						
 				default:
 					//MOSTRANDO OS RESULTADOS
 					foreach($resultado as $index){
-						echo "<br>".$index->getCodigo();
-						echo "<br>".$index->getUsuario();
-						echo "<br>".$index->getSenha();
-						echo "<br>".$index->getNome();
-						echo "<br>".$index->getSobrenome();
-						echo "<br>".$index->getNascimento();
-						echo "<br>".$index->getEmail()."<br>";
+						echo "<br> <b>codigo</b>: ".$index["codigo"];
+						echo "<br> <b>usuario</b>: ".$index["usuario"];
+						echo "<br> <b>senha</b>: ".$index["senha"];
+						echo "<br> <b>nome</b>: ".$index["nome"];
+						echo "<br> <b>sobrenome</b>: ".$index["sobrenome"];
+						echo "<br> <b>nascimento</b>: ".$index["nascimento"];
+						echo "<br> <b>sexo</b>: ".$index["sexo"];
+						echo "<br> <b>email</b>: ".$index["email"];
+						
 						echo "<br>---------------------------------------------------------------<br>";
 					}
 					break;
 			}
+		}
+
+		echo "<h1>USUARIO BUSCADO POR MIM</h1>";
+		
+		$index = $donoDao->exibirDadosUsuario("user2");
+		if($index==ModelDono::NO_RESULTS)
+			echo "ERRO 404: NAO ENCONTRADO";
+		else{
+
+			echo "<br> <b>codigo</b>: ".$index["codigo"];
+			echo "<br> <b>usuario</b>: ".$index["usuario"];
+			echo "<br> <b>senha</b>: ".$index["senha"];
+			echo "<br> <b>nome</b>: ".$index["nome"];
+			echo "<br> <b>sobrenome</b>: ".$index["sobrenome"];
+			echo "<br> <b>nascimento</b>: ".$index["nascimento"];
+			echo "<br> <b>sexo</b>: ".$index["sexo"];
+			echo "<br> <b>email</b>: ".$index["email"];
+			echo "<br>---------------------------------------------------------------<br>";
 		}
 		
 		

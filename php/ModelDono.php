@@ -13,6 +13,7 @@ class ModelDono{
 	const ALTERACAO_DADOS = -2;
 	const EXCLUSAO = -3;
 	const NO_RESULTS = 0;
+	const BLANK = 0;
 	
 	//construtor da classe
 	function __construct(){
@@ -24,7 +25,7 @@ class ModelDono{
 	}
 
 	
-	public function buscaUsuario($termo){	
+	public function buscarUsuario($termo){	
 					
 		//preparando a query do banco de dados
 		$resultado=$this->conex->getConnection()->prepare("select * from dono where nome like ? or sobrenome like ?");
@@ -43,21 +44,8 @@ class ModelDono{
 		//cada linha é tratada como um objeto
 		$arr = array();
 		if($resultado->rowCount() > 0){
-			while($linha=$resultado->fetch(PDO::FETCH_OBJ)){
-				
-				$donoPopula = new Dono();
-				
-				//PREENCHENDO O OBJETO
-				$donoPopula->setCodigo($linha->codigo);
-				$donoPopula->setUsuario($linha->usuario);
-				$donoPopula->setSenha($linha->senha);
-				$donoPopula->setNome($linha->nome);
-				$donoPopula->setSobrenome($linha->sobrenome);
-				$donoPopula->setNascimento($linha->nascimento);
-				$donoPopula->setEmail($linha->email);
-				
-				//ADICIONANDO O REGISTRO NO ARRAY DE OBJETOS
-				array_push($arr,$donoPopula);
+			while($linha=$resultado->fetch(PDO::FETCH_ASSOC)){
+				array_push($arr,$linha);
 			}			
 		}
 		
@@ -68,9 +56,34 @@ class ModelDono{
 		return $arr;
 	}
 
-	//private function existe($campo, $dado, $tipo, $codigo){
-	//private function existe($campo, $dado, $tipo){
 
+	// Exibe dados de um usuario
+	public function exibirDadosUsuario($usuario){
+
+		//preparando a query do banco de dados
+		$resultado=$this->conex->getConnection()->prepare("select * from dono where usuario=?");
+		//RESULTADO=CONEXAO->prepare("SENTENCA SQL")
+		
+		//FAZENDO O BIND DOS INDICES NA QUERY COM OS VALORES
+		$resultado->bindValue(1,$usuario);
+		
+		//EXECUTANDO A QUERY
+		$resultado->execute();
+		
+		//resgatando o resultado da consulta linha a linha(fetch)
+		//cada linha é tratada como um objeto
+		if($resultado->rowCount() > 0){
+			while($linha=$resultado->fetch(PDO::FETCH_ASSOC)){
+				return $linha;
+			}			
+		}
+		
+		else{
+			return self::NO_RESULTS;
+		}
+	}
+
+	
 	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
 	public function existe($campo,$dado,$codOcorrencia){
 
@@ -131,6 +144,7 @@ class ModelDono{
 		else return 0;
 		
 	}
+
 
 	private function geraUsuario(){
 

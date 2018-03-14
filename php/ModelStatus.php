@@ -40,7 +40,7 @@ class ModelStatus
 				}
 			}
 			else
-				$todosStatus="Nada a exibir";
+				$todosStatus="Sem atividade";
 		}catch(PDOException $e){
 			$todoStatus =  "ERRO: ".$erro->getmessage();
 		}
