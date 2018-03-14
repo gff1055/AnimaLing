@@ -29,6 +29,33 @@ class ModelAnimal
 	}
 
 
+	// Exibe dados de um usuario
+	public function exibirDadosAnimal($codigo){
+
+		//preparando a query do banco de dados
+		$resultado=$this->conex->getConnection()->prepare("select * from animal where codigo=?");
+		//RESULTADO=CONEXAO->prepare("SENTENCA SQL")
+		
+		//FAZENDO O BIND DOS INDICES NA QUERY COM OS VALORES
+		$resultado->bindValue(1,$codigo;
+		
+		//EXECUTANDO A QUERY
+		$resultado->execute();
+		
+		//resgatando o resultado da consulta linha a linha(fetch)
+		//cada linha é tratada como um objeto
+		if($resultado->rowCount() > 0){
+			while($linha=$resultado->fetch(PDO::FETCH_ASSOC)){
+				return $linha;
+			}			
+		}
+		
+		else{
+			return self::NO_RESULTS;
+		}
+	}	
+
+
 	// FUNCAO PARA VERIFICAR SE UM DADO EXISTE NO BANCO
 	public function existeAnimal($pAnimal,$codOcorrencia){
 
@@ -137,7 +164,7 @@ class ModelAnimal
 	}
 	
 	
-	public function busca($termo)
+	public function buscarAnimal($termo)
 	{
 		
 		$resultado=$this->conex->getConnection()->prepare("
