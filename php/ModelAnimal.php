@@ -30,14 +30,18 @@ class ModelAnimal
 
 
 	// Exibe dados de um usuario
-	public function exibirDadosAnimal($codigo){
+	public function exibirDadosAnimal($pcodigo){
 
 		//preparando a query do banco de dados
-		$resultado=$this->conex->getConnection()->prepare("select * from animal where codigo=?");
+		$resultado=$this->conex->getConnection()->prepare(
+			"select animal.nome as nomeAnimal, especie, animal.sexo as sexo, animal.nascimento as dataNascimento, usuario
+			from animal, dono
+			where dono.codigo=animal.codigoDono and animal.codigo=?"
+			);
 		//RESULTADO=CONEXAO->prepare("SENTENCA SQL")
 		
 		//FAZENDO O BIND DOS INDICES NA QUERY COM OS VALORES
-		$resultado->bindValue(1,$codigo;
+		$resultado->bindValue(1,$pcodigo);
 		
 		//EXECUTANDO A QUERY
 		$resultado->execute();
