@@ -88,6 +88,7 @@ class ModelDono{
 	public function existe($campo,$dado,$codOcorrencia){
 
 		$query = "select * from dono where $campo=?";
+		
 		try{
 
 			
@@ -107,10 +108,10 @@ class ModelDono{
 
 			//EXECUCAO DA QUERY COM OS VALORES
 			$result->execute();
+		
 		}catch(PDOException $erro){
 			echo "ERRO: ".$erro->getmessage();
 		}
-
 		
 		//VERIFICA A QUANTIDADE DE LINHAS RETORNADAS DA EXECUCAO DA QUERY
 		if($result->rowCount()>0){
@@ -125,23 +126,23 @@ class ModelDono{
 
 
 	// verifica se ja tem usuarios com o mesmo nome/email
-	private function verifica($dono, $codOcorrencia){
+	private function verifica($dono, $operacao){
 
+		if($operacao == ModelDono::ALTERACAO_DADOS){
+			$operacao = $dono->getCodigo();
+		}
 
-		if($codOcorrencia == ModelDono::ALTERACAO_DADOS){
-			$codOcorrencia = $dono->getCodigo();
-			//existe o usuario
-			if($this->existe("usuario", $dono->getUsuario(),$codOcorrencia)){
-				return "O USUARIO EXISTE";
-			}
+		//existe o usuario
+		if($this->existe("usuario", $dono->getUsuario(),$operacao)){
+			return "Usuario existe";
 		}
 
 		//existe o email
-		if($this->existe("email", $dono->getEmail(),$codOcorrencia)){
-			return "O EMAIL EXISTE";
+		else if($this->existe("email", $dono->getEmail(),$operacao)){
+			return "Emai existe";
 		}
 	
-		else return 0;
+		else return false;
 		
 	}
 
@@ -162,9 +163,7 @@ class ModelDono{
 	}
 
 
-	public function inserir($dono){
-		
-		$feedback = null;
+	public function inserirUsuario($dono){
 		
 		try{
 		
@@ -174,7 +173,7 @@ class ModelDono{
 
 			//no caso de haver erro
 			if($haErro)
-				$feedback = $haErro;
+				return $haErro;
 
 			else{
 
@@ -185,8 +184,7 @@ class ModelDono{
 
 				//carrega a query de insercao se o tipo de alteracao for um novo cadastro
 				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-				$feedback = "Cadastro de usuario";
-			
+						
 				// VALORES A SEREM PASSADOS PARA A QUERY
 				$result->bindValue(1,$dono->getUsuario());
 				$result->bindValue(2,$dono->getSenha());
@@ -199,7 +197,7 @@ class ModelDono{
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
 
-				$feedback = $feedback." ok";
+				return "cadastro ok";
 			}
 
 		}catch(PDOException $erro){
@@ -207,13 +205,9 @@ class ModelDono{
 			return "ocorreu um erro inesperado na aplicacao";
 
 		}
-
-		return $feedback;
 	}
 
-	public function atualizar($dono){
-		
-		$feedback = null;
+	public function alterarDadosUsuario($dono){
 		
 		try{
 		
@@ -223,7 +217,7 @@ class ModelDono{
 
 			//no caso de haver erro
 			if($haErro)
-				$feedback = $haErro;
+				return $haErro;
 
 			else{
 
@@ -231,8 +225,6 @@ class ModelDono{
 
 				//carrega a query de atualizacao
 				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-				
-				$feedback = "Alteracao de dados";
 				
 				// VALORES A SEREM PASSADOS PARA A QUERY
 				$result->bindValue(1,$dono->getUsuario());
@@ -247,7 +239,7 @@ class ModelDono{
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
 
-				$feedback = $feedback." ok";
+				return "Alteracao de dados OK";
 			}
 
 		}catch(PDOException $erro){

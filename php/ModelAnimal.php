@@ -2,6 +2,8 @@
 
 require_once("Animal.php");
 require_once("Dono.php");
+require_once("Conexao.php");
+
 
 class ModelAnimal
 {
@@ -102,26 +104,20 @@ class ModelAnimal
 	}
 
 
-	public function atualizar($pAnimal,$operacao)
+	public function inserirAnimal($pAnimal)
 	{
 		$result = null;
 
-		$feedback = null;
+		$haErro = $this->existeAnimal($pAnimal,ModelAnimal::NOVO_CADASTRO);
 
-		if($this->existeAnimal($pAnimal,$operacao)){
-			$feedback = "Ja existe um animal com esse nome";
+		if($haErro){
+			return "Voce ja possui um animal com esse nome. Escolha outro...";
 		}
+
 		else{
-			if($operacao == ModelAnimal::NOVO_CADASTRO){
-				$result = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
-				$feedback = "Cadastro de animal";
-			}
-			elseif($operacao == ModelAnimal::ALTERACAO_DADOS){
-				//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-				$result=$this->conex->getConnection()->prepare("update animal set codigoDono=?, nome=?,especie=?,nascimento=?,sexo=? where codigo=?");
-				$result->bindValue(6,$pAnimal->getCodigo());
-				$feedback = "Alteracao de dados";
-			}
+
+			$result = $this->conex->getConnection()->prepare("insert into animal(codigoDono,nome,especie,nascimento,sexo)values(?,?,?,?,?)");
+						
 			try{
 
 				// VALORES A SEREM PASSADOS PARA A QUERY
@@ -131,12 +127,44 @@ class ModelAnimal
 				$result->bindValue(4,$pAnimal->getNascimento());
 				$result->bindValue(5,$pAnimal->getSexo());
 			
+				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+				$result->execute();
+
+				return "Animal inserido...";
+
+			}catch(PDOException $erro){
+				echo "erro: ".$erro->getMessage();
+				$feedback = "erro interno na aplicacao";
+			}
+		}
+	}
+
+	public function alterarDadosAnimal($pAnimal)
+	{
+		$result = null;
+
+		if($this->existeAnimal($pAnimal,ModelAnimal::ALTERACAO_DADOS)){
+			$feedback = "Voce ja possui um animal com esse nome. Escolha outro...";
+		}
+
+		else{
+			//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+			$result=$this->conex->getConnection()->prepare("update animal set codigoDono=?, nome=?,especie=?,nascimento=?,sexo=? where codigo=?");
+					
+			try{
+				// VALORES A SEREM PASSADOS PARA A QUERY
+				$result->bindValue(1,$pAnimal->getCodigoDono());
+				$result->bindValue(2,$pAnimal->getNome());
+				$result->bindValue(3,$pAnimal->getEspecie());
+				$result->bindValue(4,$pAnimal->getNascimento());
+				$result->bindValue(5,$pAnimal->getSexo());
+				$result->bindValue(6,$pAnimal->getCodigo());
 			
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
 
 				//operacao de insercao/atualizacao foi executada
-				$feedback = $feedback." ok";
+				$feedback = "Dados do animal alterados";
 
 			}catch(PDOException $erro){
 				echo "erro: ".$erro->getMessage();
