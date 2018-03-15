@@ -162,14 +162,14 @@ class ModelDono{
 	}
 
 
-	public function atualizar($dono,$operacao){
+	public function inserir($dono){
 		
 		$feedback = null;
 		
 		try{
 		
 			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($dono, $operacao);
+			$haErro = $this->verifica($dono, ModelDono::NOVO_CADASTRO);
 
 
 			//no caso de haver erro
@@ -180,26 +180,13 @@ class ModelDono{
 
 				$result = null;
 
-				//se nao houver erro e a operacao for um cadastro
-				if($operacao == ModelDono::NOVO_CADASTRO){
+				//gerando o usuario
+				$dono->setUsuario($this->geraUsuario());
 
-					//gerando o usuario
-					$dono->setUsuario($this->geraUsuario());
-
-					//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-					$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-					$feedback = "Cadastro de usuario";
-				}
-
-				//se nao houver erro e a operacao for uma atualizacao
-				elseif($operacao == ModelDono::ALTERACAO_DADOS){
-					
-					//carrega a query de atualizacao
-					$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-					$result->bindValue(8,$dono->getCodigo());
-					$feedback = "Alteracao de dados";
-				}
-
+				//carrega a query de insercao se o tipo de alteracao for um novo cadastro
+				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+				$feedback = "Cadastro de usuario";
+			
 				// VALORES A SEREM PASSADOS PARA A QUERY
 				$result->bindValue(1,$dono->getUsuario());
 				$result->bindValue(2,$dono->getSenha());
@@ -209,6 +196,54 @@ class ModelDono{
 				$result->bindValue(6,$dono->getSexo());
 				$result->bindValue(7,$dono->getEmail());
 			
+				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
+				$result->execute();
+
+				$feedback = $feedback." ok";
+			}
+
+		}catch(PDOException $erro){
+			echo "erro: ".$erro->getMessage();
+			return "ocorreu um erro inesperado na aplicacao";
+
+		}
+
+		return $feedback;
+	}
+
+	public function atualizar($dono){
+		
+		$feedback = null;
+		
+		try{
+		
+			//verifica se os dados passados estao certos ou duplicados
+			$haErro = $this->verifica($dono, ModelDono::ALTERACAO_DADOS);
+
+
+			//no caso de haver erro
+			if($haErro)
+				$feedback = $haErro;
+
+			else{
+
+				$result = null;
+
+				//carrega a query de atualizacao
+				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
+				
+				$feedback = "Alteracao de dados";
+				
+				// VALORES A SEREM PASSADOS PARA A QUERY
+				$result->bindValue(1,$dono->getUsuario());
+				$result->bindValue(2,$dono->getSenha());
+				$result->bindValue(3,$dono->getNome());
+				$result->bindValue(4,$dono->getSobrenome());
+				$result->bindValue(5,$dono->getNascimento());
+				$result->bindValue(6,$dono->getSexo());
+				$result->bindValue(7,$dono->getEmail());
+				$result->bindValue(8,$dono->getCodigo());
+							
 				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
 				$result->execute();
 
