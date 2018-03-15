@@ -49,55 +49,49 @@ class ModelStatus
 
 	}
 
-	public function atualizar($pStatus,$pTipoRotina){
+	public function inserirStatus($pStatus){
 	
-		$feedback = null;
-
 		try{
 
-			//em caso de adicao de um novo status
-			if($pTipoRotina == ModelStatus::NOVO_STATUS){
+			//preparacao da query de insercao
+			$resultado=$this->conex->getconnection()->prepare("insert into status(conteudo, codigoAnimal, dataStatus) values (?,?,?)");
 
-				//preparacao da query de insercao
-				$resultado=$this->conex->getconnection()->prepare("insert into status(conteudo, codigoAnimal, dataStatus) values (?,?,?)");
-
-				//fazendo o binding do codigo e da data de status
-				$resultado->bindValue(2,$pStatus->getCodigoAnimal());
-				$resultado->bindValue(3,$pStatus->getDataStatus());
-
-				$feedback = "novo status";
-			}
-
-			//no caso da edicao de um status existente
-			elseif($pTipoRotina == ModelStatus::EDITANDO_STATUS){
-
-				//preparacao da query de atualizacao
-				$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
-
-				//fazendo o binding do codigo do Status
-				$resultado->bindValue(2,$pStatus->getCodigo());
-
-				$feedback="alteracao";
-			}
-
-			//no caso da operacao ser inexistente
-			else $feedback = "erro desconhecido";
-
-			//fazendo o binding do conteudo
+			//fazendo o binding do codigo, data de status edo conteudo
 			$resultado->bindValue(1,$pStatus->getConteudo());
-			
+			$resultado->bindValue(2,$pStatus->getCodigoAnimal());
+			$resultado->bindValue(3,$pStatus->getDataStatus());
+
 			//executando a query
 			$resultado->execute();
-			$feedback = $feedback." ok";
+			
+			return "novo status OK";
 
+		}catch(PDOException $erro){
+			$feedback = "Erro:".$erro->getMessage();
+			return "erro";
+		}
+	}
 
+	public function atualizarStatus($pStatus){
+	
+		try{
+
+			//preparacao da query de atualizacao
+			$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
+
+			//fazendo o binding do codigo do Status
+			$resultado->bindValue(1,$pStatus->getConteudo());
+			$resultado->bindValue(2,$pStatus->getCodigo());
+
+			$resultado->execute();
+
+			return "atualizacao de status OK";
 
 		}catch(PDOException $erro){
 			$feedback = "Erro:".$erro->getMessage();
 			return "erro";
 		}
 
-		return $feedback;
 	}
 
 	
