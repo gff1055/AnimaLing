@@ -27,7 +27,18 @@ class ModelStatus
 	public function exibirTodosStatus($codigoAnimal){
 
 		try{
-			$resultado=$this->conex->getconnection()->prepare("select a.nome, s.conteudo, s.dataStatus from animal as a inner join status as s on a.codigo=s.codigoAnimal and s.codigoAnimal=?");
+			$resultado=$this->conex->getconnection()->prepare("
+				select
+					a.nome as nomeAnimal, s.conteudo as conteudo, s.dataStatus as dataStatus 
+				from
+					animal as a
+				inner join
+					status as s 
+				on
+					a.codigo=s.codigoAnimal
+				where
+					s.codigoAnimal=?");
+
 			$resultado->bindValue(1,$codigoAnimal);
 			$resultado->execute();
 
@@ -35,18 +46,19 @@ class ModelStatus
 
 			//verifica se foi encontrado algum status associado ao animal
 			if($resultado->rowCount()>0 ){
-				while($linha=$resultado->fetch(PDO::FETCH_OBJ)){
+				while($linha=$resultado->fetch(PDO::FETCH_ASSOC)){
 					array_push($todosStatus,$linha);
 				}
+
+				return $todosStatus;
 			}
+			
 			else
-				$todosStatus="Sem atividade";
+				return 0;
+		
 		}catch(PDOException $e){
-			$todoStatus =  "ERRO: ".$erro->getmessage();
+			return  "ERRO: ".$erro->getmessage();
 		}
-
-		return $todosStatus;
-
 	}
 
 	public function inserirStatus($pStatus){

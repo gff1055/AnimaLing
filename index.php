@@ -27,6 +27,10 @@ donoDao = new DonoConBD();
 		<a href="php/testeinserirdono.php">teste inserir dono</a>
 		<br>
 		<a href="php/testeanimal.php">teste inserir animal</a>
+		<br>
+		<a href="php/testestatus.php">teste inserir status</a>
+		<br>
+		<a href="php/testeAlteraStatus.php">teste alterar status</a>
 
 	</body>
 <html>
