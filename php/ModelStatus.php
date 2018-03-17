@@ -5,6 +5,7 @@ require_once("Conexao.php");
 
 class ModelStatus
 {
+
 	private $conex;
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
@@ -27,6 +28,7 @@ class ModelStatus
 	public function exibirTodosStatus($codigoAnimal){
 
 		try{
+
 			$resultado=$this->conex->getconnection()->prepare("
 				select
 					a.nome as nomeAnimal, s.conteudo as conteudo, s.dataStatus as dataStatus 
@@ -38,7 +40,6 @@ class ModelStatus
 					a.codigo=s.codigoAnimal
 				where
 					s.codigoAnimal=?");
-
 			$resultado->bindValue(1,$codigoAnimal);
 			$resultado->execute();
 
@@ -107,7 +108,7 @@ class ModelStatus
 	}
 
 	
-	public function excluir($pStatus)
+	public function excluirStatus($pStatus)
 	{
 
 		$feedback = null;
@@ -129,7 +130,7 @@ class ModelStatus
 		return $feedback;
 	}
 	
-	public function busca($termo)
+	public function buscaStatus($termo)
 	{
 		$resultado=$this->conex->getConnection()->prepare("
 				select

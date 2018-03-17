@@ -10,27 +10,26 @@ class Amizade{
 	private $situacao;
 
 	function __construct(){
-		$this->dataSolicitacao = 
-		$this->situacao = "P";
+		
 	}
 
 	function setCodigoAnimal($pCodigoAnimal){
-		$this->codigoAnimal() = $pCodigoAnimal;
+		$this->codigoAnimal = $pCodigoAnimal;
 	}
 
 	function getCodigoAnimal(){
-		return $this->codigoAnimal();
+		return $this->codigoAnimal;
 	}
 
 	function setCodigoAmigo($pCodigoAmigo){
-		$this->codigoAmigo() = $pCodigoAmigo;
+		$this->codigoAmigo = $pCodigoAmigo;
 	}
 
 	function getCodigoAmigo(){
-		return $this->codigoAmigo();
+		return $this->codigoAmigo;
 	}
 
-	function setDataSolicitacao ($pDataSolicitacao){
+	/*function setDataSolicitacao ($pDataSolicitacao){
 		$this->dataSolicitacao = $pDataSolicitacao;
 	}
 
@@ -45,7 +44,7 @@ class Amizade{
 
 	function getDataConfirmacao(){
 		return $this->dataConfirmacao;
-	}
+	}*/
 
 	function setSituacao ($pSituacao){
 		$this->situacao = $pSituacao;
