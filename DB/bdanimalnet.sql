@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 28-Out-2017 às 16:25
+-- Generation Time: 19-Mar-2018 às 21:46
 -- Versão do servidor: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -21,21 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `bdanimalnet`
 --
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `amizade`
---
-
-CREATE TABLE `amizade` (
-  `codigo` int(10) NOT NULL,
-  `codAnimal` int(10) NOT NULL,
-  `codAmigo` int(10) NOT NULL,
-  `dataSolicitacao` date NOT NULL,
-  `dataConfirmacao` date NOT NULL,
-  `situacao` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -62,7 +47,9 @@ INSERT INTO `animal` (`codigo`, `codigoDono`, `nome`, `especie`, `sexo`, `nascim
 (4, 10, 'Adam', 'Gato', 'M', '2013-10-05'),
 (5, 4, 'Arizona', 'Cão', 'F', '2004-12-09'),
 (7, 14, 'Alerta', 'Coelho', 'F', '2017-02-28'),
-(9, 4, 'Alf', 'Elefante', 'M', '2015-12-25');
+(9, 4, 'Alf', 'Elefante', 'M', '2015-12-25'),
+(11, 6, 'Cumbuca', 'Coelho', 'M', '2013-09-03'),
+(12, 6, 'Cumbuquinha', 'Coelho', 'M', '2013-09-03');
 
 -- --------------------------------------------------------
 
@@ -102,7 +89,34 @@ INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimen
 (20, 'user20', 'iurysapori', 'Iury', 'Sapori', '2012-04-15', 'M', 'iurysantos@gmail.com'),
 (21, 'user21', 'isadorasilva', 'Isadora', 'Silva', '2012-05-17', 'F', 'isadorasilva@gmail.com'),
 (22, 'user22', 'daniellacerda', 'Daniel', 'Lacerda', '1994-10-20', 'M', 'DaviLacerda@gmail.com'),
-(23, 'user23', 'beatrizcastro', 'Beatriz', 'Castro', '2010-10-05', 'F', 'beatrizcastro@gmail.com');
+(23, 'user23', 'beatrizcastro', 'Beatriz', 'Castro', '2010-10-05', 'F', 'beatrizcastro@gmail.com'),
+(24, 'user24', 'aaronbatista', 'Aaron', 'Batista', '2016-06-25', 'M', 'aaronbatista@hotmal.com'),
+(25, 'user25', 'abelbellucci', 'Abel394', 'Bellucci3', '2015-05-24', 'M', 'abelbellucci@hotmal.com'),
+(26, 'user26', 'abelbellucci', 'Abel', 'Bellucci', '2015-05-24', 'M', 'abelbellucci2@hotmal.com');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `seguidor`
+--
+
+CREATE TABLE `seguidor` (
+  `codigo` int(10) NOT NULL,
+  `codSeguidor` int(10) NOT NULL,
+  `codAnimal` int(10) NOT NULL,
+  `situacao` varchar(2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Extraindo dados da tabela `seguidor`
+--
+
+INSERT INTO `seguidor` (`codigo`, `codSeguidor`, `codAnimal`, `situacao`) VALUES
+(1, 3, 1, '10'),
+(4, 4, 1, '10'),
+(5, 5, 3, '10'),
+(12, 11, 5, '11'),
+(22, 5, 1, '11');
 
 -- --------------------------------------------------------
 
@@ -126,19 +140,12 @@ INSERT INTO `status` (`codigo`, `codigoAnimal`, `conteudo`, `dataStatus`) VALUES
 (5, 1, 'Homem deve ser tratado como um bom vinho: no escuro, na horizontal, e com rolha na boca. BRINKS', '2017-10-13'),
 (7, 9, 'Se seu problema é dinheiro, e voce não tem dinheiro. Logo voce não tem problema', '2017-10-19'),
 (8, 3, 'TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-27'),
-(9, 3, 'DE NOVO VELHO??? TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-28');
+(9, 3, 'DE NOVO VELHO??? TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-28'),
+(10, 3, 'DE NOVO VELHO??? TO FALANDO... NÃO ESTOU NÃO!!!!', '2017-10-31');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `amizade`
---
-ALTER TABLE `amizade`
-  ADD PRIMARY KEY (`codigo`),
-  ADD UNIQUE KEY `codAmigo_fk` (`codAmigo`),
-  ADD KEY `codAnimal_fk` (`codAnimal`);
 
 --
 -- Indexes for table `animal`
@@ -154,6 +161,14 @@ ALTER TABLE `dono`
   ADD PRIMARY KEY (`codigo`);
 
 --
+-- Indexes for table `seguidor`
+--
+ALTER TABLE `seguidor`
+  ADD PRIMARY KEY (`codigo`),
+  ADD KEY `codAnimal_fk` (`codAnimal`),
+  ADD KEY `codAmigo_fk` (`codSeguidor`) USING BTREE;
+
+--
 -- Indexes for table `status`
 --
 ALTER TABLE `status`
@@ -165,41 +180,41 @@ ALTER TABLE `status`
 --
 
 --
--- AUTO_INCREMENT for table `amizade`
---
-ALTER TABLE `amizade`
-  MODIFY `codigo` int(10) NOT NULL AUTO_INCREMENT;
---
 -- AUTO_INCREMENT for table `animal`
 --
 ALTER TABLE `animal`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `dono`
 --
 ALTER TABLE `dono`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+--
+-- AUTO_INCREMENT for table `seguidor`
+--
+ALTER TABLE `seguidor`
+  MODIFY `codigo` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
-  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- Constraints for dumped tables
 --
-
---
--- Limitadores para a tabela `amizade`
---
-ALTER TABLE `amizade`
-  ADD CONSTRAINT `codAmigo_fk` FOREIGN KEY (`codAmigo`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `codAnimal_fk` FOREIGN KEY (`codAnimal`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `animal`
 --
 ALTER TABLE `animal`
   ADD CONSTRAINT `dono_id_fk` FOREIGN KEY (`codigoDono`) REFERENCES `dono` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `seguidor`
+--
+ALTER TABLE `seguidor`
+  ADD CONSTRAINT `codAmigo_fk` FOREIGN KEY (`codSeguidor`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `codAnimal_fk` FOREIGN KEY (`codAnimal`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `status`

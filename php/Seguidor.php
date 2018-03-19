@@ -1,12 +1,10 @@
 <?php
 
-class Amizade{
+class Seguidor{
 	
 	private $codigo;
 	private $codigoAnimal;
-	private $codigoAmigo;
-	private $dataSolicitacao;
-	private $dataConfirmacao;
+	private $codigoSeguidor;
 	private $situacao;
 
 	function __construct(){
@@ -21,12 +19,12 @@ class Amizade{
 		return $this->codigoAnimal;
 	}
 
-	function setCodigoAmigo($pCodigoAmigo){
-		$this->codigoAmigo = $pCodigoAmigo;
+	function setCodigoSeguidor($pCodigoSeguidor){
+		$this->codigoSeguidor = $pCodigoSeguidor;
 	}
 
-	function getCodigoAmigo(){
-		return $this->codigoAmigo;
+	function getCodigoSeguidor(){
+		return $this->codigoSeguidor;
 	}
 
 	/*function setDataSolicitacao ($pDataSolicitacao){

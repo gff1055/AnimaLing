@@ -1,9 +1,9 @@
 <?php
-require_once("ModelAmizade.php");
-require_once("Amizade.php");
+require_once("ModelSeguidor.php");
+require_once("Seguidor.php");
 
-$amizade = new Amizade();
-$modelAmizade = new ModelAmizade();
+$seguidor = new Seguidor();
+$modelAmizade = new ModelSeguidor();
 ?>
 
 <html>
@@ -14,11 +14,12 @@ $modelAmizade = new ModelAmizade();
 		
 //echo $modelStatus->atualizarStatus($status);
 
-$amizade->setCodigoAnimal(3);
-$amizade->setCodigoAmigo(5);
-$amizade->setSituacao("01");
+$seguidor->setCodigoSeguidor(5);
+$seguidor->setCodigoAnimal(1);
+$seguidor->setSituacao("01");
 
-echo $modelAmizade->adicionarAmizade($amizade);
+echo $modelAmizade->adicionarSeguidor($seguidor);
+echo $modelAmizade->seguirVolta($seguidor);
 
 
 ?>
