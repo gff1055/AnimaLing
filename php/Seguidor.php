@@ -3,7 +3,7 @@
 class Seguidor{
 	
 	private $codigo;
-	private $codigoAnimal;
+	private $codigoSeguido;
 	private $codigoSeguidor;
 	private $situacao;
 
@@ -11,12 +11,12 @@ class Seguidor{
 		
 	}
 
-	function setCodigoAnimal($pCodigoAnimal){
-		$this->codigoAnimal = $pCodigoAnimal;
+	function setCodigoSeguido($pCodigoSeguido){
+		$this->codigoSeguido = $pCodigoSeguido;
 	}
 
-	function getCodigoAnimal(){
-		return $this->codigoAnimal;
+	function getCodigoSeguido(){
+		return $this->codigoSeguido;
 	}
 
 	function setCodigoSeguidor($pCodigoSeguidor){
@@ -43,15 +43,5 @@ class Seguidor{
 	function getDataConfirmacao(){
 		return $this->dataConfirmacao;
 	}*/
-
-	function setSituacao ($pSituacao){
-		$this->situacao = $pSituacao;
-	}
-
-	function getSituacao(){
-		return $this->situacao;
-	}
-	
-	
 }
 ?>

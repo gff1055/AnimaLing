@@ -14,12 +14,17 @@ $modelAmizade = new ModelSeguidor();
 		
 //echo $modelStatus->atualizarStatus($status);
 
-$seguidor->setCodigoSeguidor(5);
-$seguidor->setCodigoAnimal(1);
-$seguidor->setSituacao("01");
+$seguidor->setCodigoSeguidor(4);
+$seguidor->setCodigoSeguido(1);
 
 echo $modelAmizade->adicionarSeguidor($seguidor);
-echo $modelAmizade->seguirVolta($seguidor);
+
+
+$seguidor->setCodigoSeguidor(1);
+$seguidor->setCodigoSeguido(4);
+
+echo $modelAmizade->adicionarSeguidor($seguidor);
+//echo $modelAmizade->seguirVolta($seguidor);
 
 
 ?>

@@ -19,44 +19,50 @@ class ModelSeguidor{
 		$this->conex = null;
 	}
 
-	public function adicionarSeguidor($pSeguidor){
-		
-		$resultado = null;
+	private function jaSegue($pSeguidor){
 
 		try{
-			$resultado = $this->conex->getConnection()->prepare("insert into seguidor(codSeguidor,codAnimal,situacao) values(?,?,?)");
+			$resultado = $this->conex->getConnection()->prepare("
+				select * from seguidor where codSeguido=? and codSeguidor=?");
 
-			$resultado->bindValue(1,$pSeguidor->getCodigoSeguidor());
-			$resultado->bindValue(2,$pSeguidor->getCodigoAnimal());
-			$resultado->bindValue(3,$pSeguidor->getSituacao());
+			$resultado->bindValue(1,$pSeguidor->getCodigoSeguido());
+			$resultado->bindValue(2,$pSeguidor->getCodigoSeguidor());
 			
 			$resultado->execute();
 
-			return "Convite enviado";
+			if($resultado->rowCount()>0)
+				return true;
+			else
+				return false;
 		
 		}catch(PDOException $e){
 			return "erro: ".$e->getMessage();
 		}
+
 	}
 
-
-	public function seguirVolta($pSeguidor){
+	public function adicionarSeguidor($pSeguidor){
 		
 		$resultado = null;
 
-		try{
-			$resultado = $this->conex->getConnection()->prepare("update seguidor set situacao='11' where codAnimal=? and codSeguidor=?");
+		if($this->jaSegue($pSeguidor)){
+			return "<br>voce ja segue o ".$pSeguidor->getCodigoSeguido();
+		}
 
-			$resultado->bindValue(1,$pSeguidor->getCodigoAnimal());
-			$resultado->bindValue(2,$pSeguidor->getCodigoSeguidor());
-			//$resultado->bindValue(3,$pSeguidor->getCodigo());
+		else{
+			try{
+				$resultado = $this->conex->getConnection()->prepare("insert into seguidor(codSeguido, codSeguidor) values(?,?)");
+
+				$resultado->bindValue(1,$pSeguidor->getCodigoSeguido());
+				$resultado->bindValue(2,$pSeguidor->getCodigoSeguidor());
 			
-			$resultado->execute();
+				$resultado->execute();
 
-			return "<br>Seguindo de volta";
+				return "Seguidor adicionado";
 		
-		}catch(PDOException $e){
-			return "erro: ".$e->getMessage();
+			}catch(PDOException $e){
+				return "erro: ".$e->getMessage();
+			}
 		}
 	}
 
