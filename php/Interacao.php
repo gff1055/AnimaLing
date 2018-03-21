@@ -1,6 +1,6 @@
 <?php
 
-class Seguidor{
+class Interacao{
 	
 	private $codigo;
 	private $codigoSeguido;

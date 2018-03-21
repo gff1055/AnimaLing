@@ -1,9 +1,12 @@
 <?php
 require_once("ModelInteracao.php");
+require_once("Animal.php");
 require_once("Interacao.php");
 
 $seguidor = new Interacao();
 $modelAmizade = new ModelInteracao();
+$animal = new Animal();
+
 ?>
 
 <html>
@@ -14,17 +17,19 @@ $modelAmizade = new ModelInteracao();
 		
 //echo $modelStatus->atualizarStatus($status);
 
-$seguidor->setCodigoSeguidor(4);
-$seguidor->setCodigoSeguido(1);
-
-echo $modelAmizade->adicionarSeguidor($seguidor);
-
-
-$seguidor->setCodigoSeguidor(1);
-$seguidor->setCodigoSeguido(4);
-
-echo $modelAmizade->adicionarSeguidor($seguidor);
 //echo $modelAmizade->seguirVolta($seguidor);
+
+
+
+$seguidores = $modelAmizade->listarSeguidores($animal);
+if(!$seguidores){
+	echo "<br> nao ha inimigos";
+}
+else{
+	foreach($seguidores as $seguidor){
+		echo "<br>".$seguidor['seguidor']."<br>";
+	}
+}
 
 
 ?>
