@@ -19,15 +19,36 @@ $animal = new Animal();
 
 //echo $modelAmizade->seguirVolta($seguidor);
 
+$animal->setCodigo(2);
+$animal->setCodigoDono(8);
+$animal->setNome("Fido");
+$animal->setEspecie("Cão");
+$animal->setSexo("F");
+$animal->setNascimento("2015-11-15");
 
+$id=5;
 
-$seguidores = $modelAmizade->listarSeguidores($animal);
+echo "<h3>Seguidores</h3>";
+
+$seguidores = $modelAmizade->listarSeguidores($id);
 if(!$seguidores){
-	echo "<br> nao ha inimigos";
+	echo "<br> nao ha animigos";
 }
 else{
 	foreach($seguidores as $seguidor){
-		echo "<br>".$seguidor['seguidor']."<br>";
+		echo "<br>".$seguidor['nomeSeguidor']."<br>";
+	}
+}
+
+echo "<h3>Voce segue</h3>";
+
+$seguidos = $modelAmizade->listarSeguidos($id);
+if(!$seguidos){
+	echo "<br> nao segue ninguem";
+}
+else{
+	foreach($seguidos as $seguido){
+		echo "<br>".$seguido['nomeSeguido']."<br>";
 	}
 }
 

@@ -68,27 +68,72 @@ class ModelInteracao{
 	}
 
 
-	public function listarSeguidores($animal){
+	public function listarSeguidores($codigoAnimal){
 		try{
+
 			$resultado=$this->conex->getConnection()->prepare("
-				select interacao.codSeguidor as seguidor
-				from interacao,animal
-				where seguido=? 
-				");
-			$resultado->bindValue(1,$animal->getCodigo());
+				select
+					i.codSeguidor as seguidor, a.nome as nomeSeguidor
+				from
+					interacao as i
+				inner JOIN
+					animal as a
+				on
+					i.codSeguido=? and a.codigo=i.codSeguidor");
+
+			$resultado->bindValue(1,$codigoAnimal);
 			$resultado->execute();
+
 			$todosSeguidores=array();
+
 			if($resultado->rowCount()>0){
 				while($linha = $resultado->fetch(PDO::FETCH_ASSOC)){
 					array_push($todosSeguidores,$linha);
 				}
+				return $todosSeguidores;
 			}
 
 			else return 0;
+
 		}catch(PDOException $e){
 			return "<br> ERRO:".$e->getMessage();
 		}
 	}
+
+
+	public function listarSeguidos($codigoAnimal){
+		try{
+
+			$resultado=$this->conex->getConnection()->prepare("
+				select
+					i.codSeguido as seguido, a.nome as nomeSeguido
+				from
+					interacao as i
+				inner JOIN
+					animal as a
+				on
+					i.codSeguidor=? and a.codigo=i.codSeguido");
+
+			$resultado->bindValue(1,$codigoAnimal);
+			$resultado->execute();
+
+			$todosSeguidores=array();
+
+			if($resultado->rowCount()>0){
+				while($linha = $resultado->fetch(PDO::FETCH_ASSOC)){
+					array_push($todosSeguidores,$linha);
+				}
+				return $todosSeguidores;
+			}
+
+			else return 0;
+
+		}catch(PDOException $e){
+			return "<br> ERRO:".$e->getMessage();
+		}
+	}
+
+
 
 	public function excluirSeguidores(){}
 

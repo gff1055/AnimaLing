@@ -33,6 +33,8 @@ donoDao = new DonoConBD();
 		<a href="php/testeAlteraStatus.php">teste alterar status</a>
 		<br>
 		<a href="php/testeAmizade.php">teste amizade</a>
+		<br>
+		<a href="php/testeListarSeguidores.php">teste listar seguidores</a>
 
 	</body>
 <html>
