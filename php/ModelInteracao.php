@@ -69,50 +69,38 @@ class ModelInteracao{
 
 
 	public function listarSeguidores($codigoAnimal){
-		try{
+			$query = "
+				select i.codSeguidor as seguidor, a.nome as nomeSeguidor
+				from interacao as i
+				inner JOIN animal as a
+				on i.codSeguido=? and a.codigo=i.codSeguidor";
 
-			$resultado=$this->conex->getConnection()->prepare("
-				select
-					i.codSeguidor as seguidor, a.nome as nomeSeguidor
-				from
-					interacao as i
-				inner JOIN
-					animal as a
-				on
-					i.codSeguido=? and a.codigo=i.codSeguidor");
+			$seguidores = $this->listar($query,$codigoAnimal);
+			
+			return $seguidores;
 
-			$resultado->bindValue(1,$codigoAnimal);
-			$resultado->execute();
-
-			$todosSeguidores=array();
-
-			if($resultado->rowCount()>0){
-				while($linha = $resultado->fetch(PDO::FETCH_ASSOC)){
-					array_push($todosSeguidores,$linha);
-				}
-				return $todosSeguidores;
-			}
-
-			else return 0;
-
-		}catch(PDOException $e){
-			return "<br> ERRO:".$e->getMessage();
-		}
 	}
 
 
 	public function listarSeguidos($codigoAnimal){
+
+
+		$query = "
+				select i.codSeguido as seguido, a.nome as nomeSeguido
+				from interacao as i
+				inner JOIN animal as a
+				on i.codSeguidor=? and a.codigo=i.codSeguido";
+
+		$seguidos = $this->listar($query,$codigoAnimal);
+			
+		return $seguidos;
+	}
+
+
+	private function listar($query,$codigoAnimal){
 		try{
 
-			$resultado=$this->conex->getConnection()->prepare("
-				select
-					i.codSeguido as seguido, a.nome as nomeSeguido
-				from
-					interacao as i
-				inner JOIN
-					animal as a
-				on
-					i.codSeguidor=? and a.codigo=i.codSeguido");
+			$resultado=$this->conex->getConnection()->prepare($query);
 
 			$resultado->bindValue(1,$codigoAnimal);
 			$resultado->execute();
@@ -130,7 +118,7 @@ class ModelInteracao{
 
 		}catch(PDOException $e){
 			return "<br> ERRO:".$e->getMessage();
-		}
+		}	
 	}
 
 
