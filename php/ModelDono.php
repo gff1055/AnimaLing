@@ -162,8 +162,58 @@ class ModelDono{
 		return "user".$userDisp;
 	}
 
-
 	public function inserirUsuario($dono){
+
+		$dono->setUsuario($this->geraUsuario());
+		$query = "insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
+		$insercao=$this->gerUsuario($dono,$query,ModelDono::NOVO_CADASTRO);
+		echo $insercao;
+						
+	}
+
+
+	public function alterarDadosUsuario($dono){
+		$query="update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?";
+	}
+
+
+	private function gerUsuario($dono,$query,$op){
+		try{
+					
+			$haErro = $this->verifica($dono, $op));
+
+			if($haErro)
+				return $haErro;
+
+			else{
+				$result = null;
+
+				$result=$this->conex->getConnection()->prepare($query);
+
+				if($op==ModelDono::ALTERACAO_DADOS){
+					$result->bindValue(8,$dono->getCodigo());
+				}
+
+				$result->bindValue(1,$dono->getUsuario());
+				$result->bindValue(2,$dono->getSenha());
+				$result->bindValue(3,$dono->getNome());
+				$result->bindValue(4,$dono->getSobrenome());
+				$result->bindValue(5,$dono->getNascimento());
+				$result->bindValue(6,$dono->getSexo());
+				$result->bindValue(7,$dono->getEmail());
+							
+				$result->execute();
+
+				return "Concluido";
+			}
+
+		}catch(PDOException $erro){
+			return "erro: ".$erro->getMessage();
+		}
+	}
+
+
+	/*public function inserirDadosUsuario($dono){
 		
 		try{
 		
@@ -205,7 +255,7 @@ class ModelDono{
 			return "ocorreu um erro inesperado na aplicacao";
 
 		}
-	}
+	}*/
 
 	public function alterarDadosUsuario($dono){
 		
@@ -250,6 +300,8 @@ class ModelDono{
 
 		return $feedback;
 	}
+
+
 	
 		
 	//
