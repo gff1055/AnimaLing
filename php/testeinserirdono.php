@@ -9,16 +9,15 @@ $dono = new Dono();
 <html>
 	<body>
 <?php
-$dono->setNome("temp");
-$dono->setSobreNome("Bellucci3");
-$dono->setUsuario("temporario");
-$dono->setSenha("abelbellucci");
-$dono->setNascimento('2015-05-24');
+$dono->setNome("Alex");
+$dono->setSobreNome("Alison");
+$dono->setSenha("s@aleali");
+$dono->setNascimento('2014-04-23');
 $dono->setSexo("M");
-$dono->setEmail("temporario@hotmal.com");
-$dono->setCodigo(896);
+$dono->setEmail("alexalison@gmal.com");
+
 		
-echo $tabelaDono->alterarDadosUsuario($dono);
+echo $tabelaDono->inserirUsuario($dono);
 ?>
 	</body>
 </html>

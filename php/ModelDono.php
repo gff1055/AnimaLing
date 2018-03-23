@@ -139,7 +139,7 @@ class ModelDono{
 
 		//existe o email
 		else if($this->existe("email", $dono->getEmail(),$operacao)){
-			return "Emai existe";
+			return "Email existe";
 		}
 	
 		else return false;
@@ -154,43 +154,53 @@ class ModelDono{
 		$result->execute();
 		
 		//recebendo o resultado
-		$linha=$result->fetch(PDO::FETCH_OBJ);
+		$linha = $result->fetch(PDO::FETCH_OBJ);
 
 		//gerando o ID do usuario disponivel
-		$userDisp=$linha->maiorCodigo+1;
+		$userDisp = $linha->maiorCodigo+1;
 		
 		return "user".$userDisp;
 	}
 
+
 	public function inserirUsuario($dono){
 
 		$dono->setUsuario($this->geraUsuario());
-		$query = "insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-		$insercao=$this->gerUsuario($dono,$query,ModelDono::NOVO_CADASTRO);
-		echo $insercao;
+		
+		$query = "insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)";
+
+		$insercao = $this->gerenciarUsuarios($dono,$query,ModelDono::NOVO_CADASTRO);
+
+		return $insercao;
 						
 	}
 
 
 	public function alterarDadosUsuario($dono){
+		
 		$query="update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?";
+
+		$atualizacao = $this->gerenciarUsuarios($dono, $query, ModelDono::ALTERACAO_DADOS);
+
+		return $atualizacao;
 	}
 
 
-	private function gerUsuario($dono,$query,$op){
+	private function gerenciarUsuarios($dono, $query, $op){
 		try{
 					
-			$haErro = $this->verifica($dono, $op));
+			$haErro = $this->verifica($dono, $op);
 
 			if($haErro)
 				return $haErro;
 
 			else{
+
 				$result = null;
 
-				$result=$this->conex->getConnection()->prepare($query);
+				$result = $this->conex->getConnection()->prepare($query);
 
-				if($op==ModelDono::ALTERACAO_DADOS){
+				if($op == ModelDono::ALTERACAO_DADOS){
 					$result->bindValue(8,$dono->getCodigo());
 				}
 
@@ -213,98 +223,6 @@ class ModelDono{
 	}
 
 
-	/*public function inserirDadosUsuario($dono){
-		
-		try{
-		
-			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($dono, ModelDono::NOVO_CADASTRO);
-
-
-			//no caso de haver erro
-			if($haErro)
-				return $haErro;
-
-			else{
-
-				$result = null;
-
-				//gerando o usuario
-				$dono->setUsuario($this->geraUsuario());
-
-				//carrega a query de insercao se o tipo de alteracao for um novo cadastro
-				$result=$this->conex->getConnection()->prepare("insert into dono(usuario,senha,nome,sobrenome,nascimento,sexo,email)values(?,?,?,?,?,?,?)");
-						
-				// VALORES A SEREM PASSADOS PARA A QUERY
-				$result->bindValue(1,$dono->getUsuario());
-				$result->bindValue(2,$dono->getSenha());
-				$result->bindValue(3,$dono->getNome());
-				$result->bindValue(4,$dono->getSobrenome());
-				$result->bindValue(5,$dono->getNascimento());
-				$result->bindValue(6,$dono->getSexo());
-				$result->bindValue(7,$dono->getEmail());
-			
-				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
-				$result->execute();
-
-				return "cadastro ok";
-			}
-
-		}catch(PDOException $erro){
-			echo "erro: ".$erro->getMessage();
-			return "ocorreu um erro inesperado na aplicacao";
-
-		}
-	}*/
-
-	public function alterarDadosUsuario($dono){
-		
-		try{
-		
-			//verifica se os dados passados estao certos ou duplicados
-			$haErro = $this->verifica($dono, ModelDono::ALTERACAO_DADOS);
-
-
-			//no caso de haver erro
-			if($haErro)
-				return $haErro;
-
-			else{
-
-				$result = null;
-
-				//carrega a query de atualizacao
-				$result=$this->conex->getConnection()->prepare("update dono set usuario=?,senha=?,nome=?,sobrenome=?,nascimento=?,sexo=?,email=? where codigo=?");
-				
-				// VALORES A SEREM PASSADOS PARA A QUERY
-				$result->bindValue(1,$dono->getUsuario());
-				$result->bindValue(2,$dono->getSenha());
-				$result->bindValue(3,$dono->getNome());
-				$result->bindValue(4,$dono->getSobrenome());
-				$result->bindValue(5,$dono->getNascimento());
-				$result->bindValue(6,$dono->getSexo());
-				$result->bindValue(7,$dono->getEmail());
-				$result->bindValue(8,$dono->getCodigo());
-							
-				//EXECUTANDO A QUERY DE ATUALIZACAO/CADASTRO
-				$result->execute();
-
-				return "Alteracao de dados OK";
-			}
-
-		}catch(PDOException $erro){
-			echo "erro: ".$erro->getMessage();
-			return "ocorreu um erro inesperado na aplicacao";
-
-		}
-
-		return $feedback;
-	}
-
-
-	
-		
-	//
 	public function excluir($codigo){
 		$excluido = false;
 		if($this->existe("codigo", $codigo, ModelDono::EXCLUSAO)){

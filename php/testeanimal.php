@@ -9,14 +9,14 @@ $animal = new Animal();
 <html>
 	<body>
 <?php
-$animal->setCodigo(12);
-$animal->setCodigoDono(6);
-$animal->setNome("Cumbuquinha");
-$animal->setEspecie("Coelho");
-$animal->setNascimento("2013-09-03");
+//$animal->setCodigo(12);
+$animal->setCodigoDono(27);
+$animal->setNome("Fido");
+$animal->setEspecie("Porquinho da India");
+$animal->setNascimento("2012-08-02");
 $animal->setSexo("M");
 		
-echo $tabelaAnimal->alterarDadosAnimal($animal);
+echo $tabelaAnimal->inserirAnimal($animal);
 ?>
 	</body>
 </html>

@@ -1,24 +1,24 @@
 <?php
-require_once("donoConBD.php");
-require_once("dono.php");
+require_once("ModelDono.php");
+require_once("Dono.php");
 
-$tabelaDono = new DonoConBD();
+$tabelaDono = new ModelDono();
 $dono = new Dono();
 ?>
 
 <html>
 	<body>
 <?php
-$dono->setNome("Guilherme26");
-$dono->setSobreNome("Ferreira26");
-$dono->setUsuario("gff10526");
-$dono->setSenha("senha26");
-$objAuxData = new DateTime('2017-07-26');
-$dono->setNascimento($objAuxData->format('y/m/d'));
+$dono->setNome("Anthony");
+$dono->setSobreNome("Alessandro");
+$dono->setUsuario("antales");
+$dono->setSenha("s@antale");
+$dono->setNascimento("2018-02-23");
 $dono->setSexo("M");
-$dono->setEmail("guilhermeferreira26@hotmal.com");
+$dono->setEmail("anthonyalessandro@gmail.com");
+$dono->setCodigo(25);
 		
-$tabelaDono->alteracao($dono,11);
+echo $tabelaDono->alterarDadosUsuario($dono);
 ?>
 	</body>
 </html>
