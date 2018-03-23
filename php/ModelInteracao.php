@@ -135,7 +135,30 @@ class ModelInteracao{
 
 
 
-	public function excluirSeguidores(){}
+	public function excluirSeguidor($pInteracao){
+
+		try{
+
+			$query = "
+			delete from
+				interacao
+			where
+				codSeguido=? and codSeguidor=?";
+
+			$resultado = $this->conex->getConnection()->prepare($query);
+
+			$resultado->bindValue(1,$pInteracao->getCodigoSeguido());
+			$resultado->bindValue(2,$pInteracao->getCodigoSeguidor());
+
+			$resultado->execute();
+
+			return "seguidor excluido";
+
+		}catch(PDOException $e){
+			return "<br>ERRO: ".$e->getMessage();
+		}
+
+	}
 
 	
 }

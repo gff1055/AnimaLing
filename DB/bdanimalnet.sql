@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: 19-Mar-2018 às 21:46
--- Versão do servidor: 10.1.25-MariaDB
--- PHP Version: 5.6.31
+-- Host: localhost
+-- Generation Time: 23-Mar-2018 às 02:46
+-- Versão do servidor: 10.1.30-MariaDB
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -97,26 +97,26 @@ INSERT INTO `dono` (`codigo`, `usuario`, `senha`, `nome`, `sobrenome`, `nascimen
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `seguidor`
+-- Estrutura da tabela `interacao`
 --
 
-CREATE TABLE `seguidor` (
+CREATE TABLE `interacao` (
   `codigo` int(10) NOT NULL,
-  `codSeguidor` int(10) NOT NULL,
-  `codAnimal` int(10) NOT NULL,
-  `situacao` varchar(2) NOT NULL
+  `codSeguido` int(10) NOT NULL,
+  `codSeguidor` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Extraindo dados da tabela `seguidor`
+-- Extraindo dados da tabela `interacao`
 --
 
-INSERT INTO `seguidor` (`codigo`, `codSeguidor`, `codAnimal`, `situacao`) VALUES
-(1, 3, 1, '10'),
-(4, 4, 1, '10'),
-(5, 5, 3, '10'),
-(12, 11, 5, '11'),
-(22, 5, 1, '11');
+INSERT INTO `interacao` (`codigo`, `codSeguido`, `codSeguidor`) VALUES
+(1, 1, 3),
+(4, 1, 4),
+(5, 3, 5),
+(12, 5, 11),
+(22, 1, 5),
+(24, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -161,12 +161,10 @@ ALTER TABLE `dono`
   ADD PRIMARY KEY (`codigo`);
 
 --
--- Indexes for table `seguidor`
+-- Indexes for table `interacao`
 --
-ALTER TABLE `seguidor`
-  ADD PRIMARY KEY (`codigo`),
-  ADD KEY `codAnimal_fk` (`codAnimal`),
-  ADD KEY `codAmigo_fk` (`codSeguidor`) USING BTREE;
+ALTER TABLE `interacao`
+  ADD PRIMARY KEY (`codigo`);
 
 --
 -- Indexes for table `status`
@@ -184,21 +182,25 @@ ALTER TABLE `status`
 --
 ALTER TABLE `animal`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
 --
 -- AUTO_INCREMENT for table `dono`
 --
 ALTER TABLE `dono`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
 --
--- AUTO_INCREMENT for table `seguidor`
+-- AUTO_INCREMENT for table `interacao`
 --
-ALTER TABLE `seguidor`
-  MODIFY `codigo` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+ALTER TABLE `interacao`
+  MODIFY `codigo` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
   MODIFY `codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
 --
 -- Constraints for dumped tables
 --
@@ -208,13 +210,6 @@ ALTER TABLE `status`
 --
 ALTER TABLE `animal`
   ADD CONSTRAINT `dono_id_fk` FOREIGN KEY (`codigoDono`) REFERENCES `dono` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Limitadores para a tabela `seguidor`
---
-ALTER TABLE `seguidor`
-  ADD CONSTRAINT `codAmigo_fk` FOREIGN KEY (`codSeguidor`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `codAnimal_fk` FOREIGN KEY (`codAnimal`) REFERENCES `animal` (`codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `status`
