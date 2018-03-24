@@ -9,9 +9,9 @@ class ModelStatus
 	private $conex;
 
 	//constante usada para verificar se a alteracao a ser feita no banco é um cadastro
-	const NOVO_STATUS = -1;
-	const EDITANDO_STATUS = -2;
-	const EXCLUSAO = -3;
+	const NOVO_STATUS = 1;
+	const OK = 2;
+	const EXCLUSAO = 3;
 	const NO_RESULTS = 0;
 	
 	
@@ -64,72 +64,71 @@ class ModelStatus
 
 	public function inserirStatus($pStatus){
 	
-		try{
-
-			//preparacao da query de insercao
-			$resultado=$this->conex->getconnection()->prepare("insert into status(conteudo, codigoAnimal, dataStatus) values (?,?,?)");
-
-			//fazendo o binding do codigo, data de status edo conteudo
-			$resultado->bindValue(1,$pStatus->getConteudo());
-			$resultado->bindValue(2,$pStatus->getCodigoAnimal());
-			$resultado->bindValue(3,$pStatus->getDataStatus());
-
-			//executando a query
-			$resultado->execute();
-			
-			return "novo status OK";
-
-		}catch(PDOException $erro){
-			$feedback = "Erro:".$erro->getMessage();
-			return "erro";
-		}
+		$query = "insert into status(conteudo, codigoAnimal, dataStatus) values (?,?,?)";
+		$novoStatus = $this->gerenciarStatus($pStatus, $query, true);		
+		return $novoStatus;
 	}
+
 
 	public function atualizarStatus($pStatus){
 	
+		$query = "update status set conteudo=? where codigo=?";
+		$atualizarStatus = $this->gerenciarStatus($pStatus, $query, false);
+		return $atualizarStatus;
+	}
+
+
+	private function gerenciarStatus($pStatus,$query,$novoStatus){
+	
 		try{
 
-			//preparacao da query de atualizacao
-			$resultado=$this->conex->getconnection()->prepare("update status set conteudo=? where codigo=?");
+			//preparacao a query
+			$resultado=$this->conex->getconnection()->prepare($query);
 
-			//fazendo o binding do codigo do Status
+			//fazendo o binding do codigo, data de status e do conteudo
 			$resultado->bindValue(1,$pStatus->getConteudo());
-			$resultado->bindValue(2,$pStatus->getCodigo());
+			
+			// se for um novo status śerá preciso a data e o "animal" que postou
+			if($novoStatus){
+				$resultado->bindValue(2,$pStatus->getCodigoAnimal());	
+				$resultado->bindValue(3,$pStatus->getDataStatus());
+			}
 
+			// se for editar um status já existente é necessario apenas o codigo
+			else{
+				$resultado->bindValue(2,$pStatus->getCodigo());
+			}
+			
+			//executando a query
 			$resultado->execute();
-
-			return "atualizacao de status OK";
+			
+			return $this::OK;
 
 		}catch(PDOException $erro){
-			$feedback = "Erro:".$erro->getMessage();
-			return "erro";
+			return "Erro:".$erro->getMessage();
 		}
-
 	}
 
 	
 	public function excluirStatus($pStatus)
 	{
 
-		$feedback = null;
-
 		try{
 
 			$resultado=$this->conex->getConnection()->prepare("delete from status where codigo=?");
 			$resultado->bindValue(1,$pStatus->getCodigo());
 			$resultado->execute();
-			$feedback = "O status foi excluido";
+			return "O status foi excluido";
 
 
 		}catch(PDOException $erro){
 
 			echo "Erro: ".$erro.getMessage();
-			$feedback = "erro inesperado";
+			return "erro inesperado";
 		}
-
-		return $feedback;
 	}
 	
+
 	public function buscaStatus($termo)
 	{
 		$resultado=$this->conex->getConnection()->prepare("

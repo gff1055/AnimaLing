@@ -9,11 +9,10 @@ $modelStatus = new ModelStatus();
 <html>
 	<body>
 <?php
-$status->setCodigoAnimal(7);
-$status->setDataStatus(Status::NOVO_STATUS);
-$status->setConteudo("Com muito sono...");
+$status->setCodigo(12);
+$status->setConteudo("Porcaria de sono ja foi embora :(...");
 		
-echo $modelStatus->inserirStatus($status);
+echo $modelStatus->atualizarStatus($status);
 ?>
 	</body>
 </html>
